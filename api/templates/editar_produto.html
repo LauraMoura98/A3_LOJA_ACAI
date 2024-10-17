@@ -1,0 +1,7 @@
+<h1>Editar Produto: {{ produto.nome }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Atualizar</button>
+</form>
+<a href="{% url 'listar_produtos' %}">Voltar</a>
