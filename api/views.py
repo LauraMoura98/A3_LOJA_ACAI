@@ -44,3 +44,14 @@ def deletar_produto(request, id):
         produto.delete()
         return redirect('listar_produtos')
     return render(request, 'deletar_produto.html', {'produto': produto})
+ 
+    
+# HOME
+def home(request):
+    return render(request, 'home.html')
+
+ 
+# CARDAPIO 
+def cardapio(request):
+    produtos = Produto.objects.all()  # Busca todos os produtos
+    return render(request, 'cardapio.html', {'produtos': produtos})  # Passa os produtos para o template
