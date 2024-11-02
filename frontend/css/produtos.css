@@ -1,38 +1,74 @@
+/* Estilo da navbar de categorias */
+/* Estilo da navbar de categorias */
+.navbar-categorias {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    margin: 20px auto;
+}
+
+.navbar-categorias button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff; /* Cor de fundo dos botões */
+    color: #333;
+    font-size: 1.1em; /* Aumenta o tamanho da fonte */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-categorias button:hover {
+    background-color: #ddd;
+}
+
+.navbar-categorias button.active {
+    background-color: #4B0082;
+    color: #fff;
+}
+
+
 /* Atualizando o estilo do produto */
+/* Estilo da lista de produtos em telas maiores */
 .produtos-item {
     display: flex;
-    align-items: center; /* Alinha verticalmente os itens no centro */
+    align-items: center;
     background-color: #fff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative; /* Para permitir a flutuação da imagem */
-    max-width: 600px; /* Largura máxima do item */
-    margin: 10px auto; /* Centraliza horizontalmente e adiciona margem em cima e embaixo */
+    position: relative;
+    max-width: 600px;
+    margin: 10px auto;
 }
 
 /* Estilo da imagem do produto */
 .produtos-imagem {
-    flex-shrink: 0; /* Impede que a imagem encolha */
-    margin-right: 20px; /* Espaço entre a imagem e o texto */
+    flex-shrink: 0;
+    margin-right: 20px;
 }
 
 .produtos-imagem img {
-    max-width: 150px; /* Limita a largura máxima da imagem */
-    height: auto; /* Mantém a proporção da imagem */
+    max-width: 150px;
+    height: auto;
 }
 
 /* Adicionando a linha vertical */
 .divisor {
-    width: 1px; /* Largura da linha */
-    background-color: #ccc; /* Cor da linha */
-    height: 60px; /* Altura da linha, ajuste conforme necessário */
-    margin: 0 20px; /* Margens laterais da linha */
+    width: 1px;
+    background-color: #ccc;
+    height: 60px;
+    margin: 0 20px;
 }
 
 /* Estilo da área de texto do produto */
 .produtos-detalhes {
-    flex-grow: 1; /* Permite que essa área ocupe o espaço restante */
+    flex-grow: 1;
 }
 
 /* Alinhamento e estilos dos textos */
@@ -49,12 +85,44 @@
 
 /* Estilo do preço */
 .produtos-preco {
-    text-align: right; /* Alinha o preço à direita */
+    text-align: right;
     font-size: 1.2em;
-    color: #4B0082; /* Ajuste conforme sua paleta */
+    color: #4B0082;
     font-weight: bold;
 }
 
 .produtos-preco p {
     margin: 0;
 }
+
+/* Responsividade: Ajuste para telas de smartphones */
+@media (max-width: 768px) {
+    /* Exibir os itens do produto em coluna */
+    .produtos-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .produtos-imagem {
+        margin: 10px 0; /* Espaço acima e abaixo da imagem */
+    }
+
+    .produtos-detalhes h3 {
+        font-size: 1.3em;
+        color: #333;
+    }
+
+    .produtos-preco {
+        text-align: left; /* Alinha o preço à esquerda em telas menores */
+        font-size: 1.1em;
+        color: #4B0082;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .divisor {
+        display: none; /* Remove a linha vertical em telas menores */
+    }
+}
+
