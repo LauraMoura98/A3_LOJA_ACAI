@@ -1,0 +1,60 @@
+/* Atualizando o estilo do produto */
+.produtos-item {
+    display: flex;
+    align-items: center; /* Alinha verticalmente os itens no centro */
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* Para permitir a flutuação da imagem */
+    max-width: 600px; /* Largura máxima do item */
+    margin: 10px auto; /* Centraliza horizontalmente e adiciona margem em cima e embaixo */
+}
+
+/* Estilo da imagem do produto */
+.produtos-imagem {
+    flex-shrink: 0; /* Impede que a imagem encolha */
+    margin-right: 20px; /* Espaço entre a imagem e o texto */
+}
+
+.produtos-imagem img {
+    max-width: 150px; /* Limita a largura máxima da imagem */
+    height: auto; /* Mantém a proporção da imagem */
+}
+
+/* Adicionando a linha vertical */
+.divisor {
+    width: 1px; /* Largura da linha */
+    background-color: #ccc; /* Cor da linha */
+    height: 60px; /* Altura da linha, ajuste conforme necessário */
+    margin: 0 20px; /* Margens laterais da linha */
+}
+
+/* Estilo da área de texto do produto */
+.produtos-detalhes {
+    flex-grow: 1; /* Permite que essa área ocupe o espaço restante */
+}
+
+/* Alinhamento e estilos dos textos */
+.produtos-detalhes h3 {
+    font-size: 1.2em;
+    margin: 0;
+    color: #333;
+}
+
+.produtos-detalhes p {
+    margin: 5px 0;
+    color: #666;
+}
+
+/* Estilo do preço */
+.produtos-preco {
+    text-align: right; /* Alinha o preço à direita */
+    font-size: 1.2em;
+    color: #4B0082; /* Ajuste conforme sua paleta */
+    font-weight: bold;
+}
+
+.produtos-preco p {
+    margin: 0;
+}
