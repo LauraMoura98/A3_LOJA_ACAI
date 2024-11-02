@@ -3,8 +3,12 @@
 <head>
 	<meta charset='UTF-8'>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/tela.js" defer></script> <!-- Referência ao arquivo externo -->
+    <script src="js/tela.js" defer></script>
+	<script src="js/produtos.js" defer></script>
+	<script src="js/navbar.js" defer></script>
 	
+	<link rel="stylesheet" type="text/css" href="css/produtos.css" media="all">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<title>
 	HOME - Açaí
 	</title>
@@ -22,6 +26,16 @@
 
 <div>
 <!-- DIV PARA CATEGORIAS E ITENS DO CATÁLOGO -->
+
+<div id="lista-produtos" style="max-width: 800px; margin: 0 auto;">
+    <!-- Produtos serão inseridos aqui -->
+</div>
+
+
+
+
+
+
 </div>
 
 <br>
@@ -31,8 +45,8 @@
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-logo">
-            <img src="img/acai-faseh.png" alt="Logo Açaí Faseh">
-			<img src="img/vector1.png" class="footer-vector">
+            <img src="assets/acai-faseh.png" alt="Logo Açaí Faseh">
+			<img src="assets/vector1.png" class="footer-vector">
         </div>
         <div class="footer-info">
             <h4>VESPASIANO - MG</h4>
@@ -41,8 +55,8 @@
             <p>WhatsApp: (31) 99999-0000</p>
         </div>
         <div class="footer-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3756.603732219963!2d-43.93785912555298!3d-19.686904430783176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa687f85e0075f1%3A0x8a39131cfa049b66!2sFaseh%20-%20Faculdade%20da%20Sa%C3%BAde%20e%20Ecologia%20Humana!5e0!3m2!1spt-BR!2sbr!4v1730055042244!5m2!1spt-BR!2sbr" width="300" height="225" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-			<!-- <img src="img/map.png" alt="Mapa de Localização"> -->
+            <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3756.603732219963!2d-43.93785912555298!3d-19.686904430783176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa687f85e0075f1%3A0x8a39131cfa049b66!2sFaseh%20-%20Faculdade%20da%20Sa%C3%BAde%20e%20Ecologia%20Humana!5e0!3m2!1spt-BR!2sbr!4v1730055042244!5m2!1spt-BR!2sbr" width="300" height="225" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+			<!-- <img src="assets/map.png" alt="Mapa de Localização"> -->
         </div>
     </div>
     <div class="footer-bottom">
