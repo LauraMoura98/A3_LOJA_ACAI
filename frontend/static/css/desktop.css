@@ -66,7 +66,7 @@ body {
 
 
 .fundo-navbar{
-	background-image:url("../assets/banner_principal.png");
+	background-image:url("../static/img/banner_principal.png");
 	background-size: cover; /* Faz a imagem cobrir toda a div, mantendo a proporção */
     background-repeat: no-repeat; /* Evita que a imagem se repita */
     background-position: center; /* Centraliza a imagem na div */

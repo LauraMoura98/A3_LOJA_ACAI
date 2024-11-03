@@ -6,7 +6,7 @@ function loadNavbar() {
     if (isMobile) {
         navbarContainer.innerHTML = `
             <div class="navbar">
-                <img src="assets/Logo.png" class="logo" alt="Logo">
+                <img src="static/img/Logo.png" class="logo" alt="Logo">
                 <div class="hamburger" onclick="toggleMenu()">
                     <div></div>
                     <div></div>
@@ -17,8 +17,8 @@ function loadNavbar() {
                     <a href="#pedido">FAÇA SEU PEDIDO</a>
                     <a href="#contato">CONTATO</a>
                     <div class="nav-icons">
-                        <a href="#carrinho"><img src="assets/Carrinho.png" class="icon" alt="Carrinho"></a>
-                        <a href="#conta"><img src="assets/Conta.png" class="icon" alt="Conta"></a>
+                        <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
+                        <a href="#conta"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
                     </div>
                 </div>
             </div>
@@ -26,15 +26,15 @@ function loadNavbar() {
     } else {
         navbarContainer.innerHTML = `
             <div class="navbar">
-                <img src="assets/Logo.png" class="logo" alt="Logo">
+                <img src="static/img/Logo.png" class="logo" alt="Logo">
                 <div class="nav-links">
                     <a href="#home">HOME</a>
                     <a href="#pedido">FAÇA SEU PEDIDO</a>
                     <a href="#contato">CONTATO</a>
                 </div>
                 <div class="nav-icons">
-                    <a href="#carrinho"><img src="assets/Carrinho.png" class="icon" alt="Carrinho"></a>
-                    <a href="#conta"><img src="assets/Conta.png" class="icon" alt="Conta"></a>
+                    <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
+                    <a href="#conta"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
                 </div>
             </div>
         `;

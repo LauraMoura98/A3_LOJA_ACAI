@@ -97,7 +97,7 @@ body {
 }
 
 .fundo-navbar {
-    background-image: url("../assets/banner_principal_mobile.png");
+    background-image: url("../static/img/banner_principal_mobile.png");
     background-size: contain; /* Ajusta a imagem para caber na largura da div */
     background-repeat: no-repeat;
     background-position: center;
