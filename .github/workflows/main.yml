@@ -31,5 +31,6 @@ jobs:
             echo "Atualizando o container..."
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
+            docker ps
             docker run -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME
           EOF
