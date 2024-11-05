@@ -33,5 +33,4 @@ jobs:
             docker rm $IMAGE_NAME || true
             docker ps
             docker run -d --name $IMAGE_NAME $IMAGE_NAME
-
           EOF
