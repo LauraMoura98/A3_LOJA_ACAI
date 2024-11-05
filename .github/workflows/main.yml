@@ -32,5 +32,5 @@ jobs:
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
             docker ps
-            docker run -d --name $IMAGE_NAME $IMAGE_NAME
+            docker run -it -d --name $IMAGE_NAME-p 8080:8080 $IMAGE_NAME
           EOF
