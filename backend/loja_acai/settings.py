@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6j0rz7-(&0@0zc@f67t&t6!lla6*hrv)blrbi82ga=@t14sn(d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["64.181.186.96", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['0.0.0.0', "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -57,7 +57,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'loja_acai.urls'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
 
 TEMPLATES = [
     {
@@ -124,9 +126,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/app/staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SWAGGER_SETTINGS = {
+    'LOGIN_REQUIRED': False,
+    'USE_SESSION_AUTH': False,
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
