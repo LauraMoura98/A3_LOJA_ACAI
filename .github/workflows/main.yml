@@ -32,6 +32,6 @@ jobs:
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
             docker ps
-            docker run -d --name IMAGE_NAME -p 8000:8000 IMAGE_NAME gunicorn loja_acai.wsgi:application --bind 0.0.0.0:8000
+            docker run -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME gunicorn loja_acai.wsgi:application --bind 0.0.0.0:8000
 
           EOF
