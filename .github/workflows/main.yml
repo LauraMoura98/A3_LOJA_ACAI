@@ -1,0 +1,35 @@
+name: Auto Pull, Build, and Deploy on Push to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configurar SSH para Acesso ao Servidor
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Conectar, Fazer Pull e Construir Imagem no Servidor
+        env:
+          HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
+          USER: 'ubuntu'      
+          REPO_DIR: '/home/$USER/A3_LOJA_ACAI' 
+          IMAGE_NAME: 'django-backend'   # Nome da sua imagem Docker
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+            cd $REPO_DIR
+            echo "Fazendo pull do código mais recente..."
+            git pull origin master
+            echo "Construindo uma nova imagem Docker..."
+            docker build -t $IMAGE_NAME .
+            echo "Atualizando o container..."
+            docker stop $IMAGE_NAME || true
+            docker rm $IMAGE_NAME || true
+            docker run -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME
+          EOF
