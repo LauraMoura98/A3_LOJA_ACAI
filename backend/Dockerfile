@@ -16,4 +16,3 @@ EXPOSE 8000
 RUN python manage.py migrate
 
 CMD ["gunicorn", "--config", "gunicorn_config.py", "loja_acai.wsgi:application"]
-
