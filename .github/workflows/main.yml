@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
       - name: Configurar SSH para Acesso ao Servidor
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -24,10 +27,9 @@ jobs:
           IMAGE_NAME: 'django-backend'   # Nome da sua imagem Docker
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-            sudo chown -R $(whoami):$(whoami) .git
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
-            git pull origin master -v
+            git pull origin master
             cd $BACKEND_DIR
             echo "Construindo uma nova imagem Docker..."
             docker rmi $IMAGE_NAME || true
@@ -35,6 +37,5 @@ jobs:
             echo "Atualizando o container..."
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
-            docker ps
             docker run -it -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME
           EOF
