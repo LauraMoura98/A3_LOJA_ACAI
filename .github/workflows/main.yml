@@ -33,5 +33,5 @@ jobs:
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
             docker ps
-            docker run -it -d --name $IMAGE_NAME $IMAGE_NAME
+            docker run -it -d --name $IMAGE_NAME django-backend
           EOF
