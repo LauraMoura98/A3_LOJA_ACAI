@@ -19,13 +19,15 @@ jobs:
         env:
           HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
           USER: 'ubuntu'      
-          REPO_DIR: '/home/$USER/A3_LOJA_ACAI/backend' 
+          REPO_DIR: '~/A3_LOJA_ACAI' 
+          BACKEND_DIR: '$REPO_DIR/backend'
           IMAGE_NAME: 'django-backend'   # Nome da sua imagem Docker
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
-            git pull origin master
+            git pull origin master -v
+            cd $BACKEND_DIR
             echo "Construindo uma nova imagem Docker..."
             docker rmi $IMAGE_NAME || true
             docker build -t $IMAGE_NAME .
