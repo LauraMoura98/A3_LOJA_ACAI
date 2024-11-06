@@ -27,6 +27,7 @@ jobs:
             echo "Fazendo pull do código mais recente..."
             git pull origin master
             echo "Construindo uma nova imagem Docker..."
+            docker rmi $IMAGE_NAME || true
             docker build -t $IMAGE_NAME .
             echo "Atualizando o container..."
             docker stop $IMAGE_NAME || true
