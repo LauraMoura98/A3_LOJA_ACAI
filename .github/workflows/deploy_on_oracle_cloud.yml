@@ -35,4 +35,5 @@ jobs:
             docker rm $IMAGE_NAME || true
             docker run -it -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME
             docker ps
+            docker logs $IMAGE_NAME
           EOF
