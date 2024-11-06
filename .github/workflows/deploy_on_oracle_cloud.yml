@@ -29,8 +29,7 @@ jobs:
             sudo git pull origin master
             cd $BACKEND_DIR
             echo "Construindo uma nova imagem Docker..."
-            docker rmi $IMAGE_NAME || true
-            docker build -t $IMAGE_NAME .
+            docker build --no-cache -t $IMAGE_NAME .
             echo "Atualizando o container..."
             docker stop $IMAGE_NAME || true
             docker rm $IMAGE_NAME || true
