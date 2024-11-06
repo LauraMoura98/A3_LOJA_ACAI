@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-
       - name: Configurar SSH para Acesso ao Servidor
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -24,12 +21,12 @@ jobs:
           USER: 'ubuntu'      
           REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
           BACKEND_DIR: '/home/ubuntu/A3_LOJA_ACAI/backend'
-          IMAGE_NAME: 'django-backend'   # Nome da sua imagem Docker
+          IMAGE_NAME: 'django-backend'
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
-            git pull origin master
+            sudo git pull origin master
             cd $BACKEND_DIR
             echo "Construindo uma nova imagem Docker..."
             docker rmi $IMAGE_NAME || true
