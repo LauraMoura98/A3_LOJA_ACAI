@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile.django
     container_name: django
     volumes:
-      - ./backend:/loja_acai
-      - ./staticfiles:/loja_acai/static  
+      - ./backend:/app
+      - ./staticfiles:/app/static  # Para acessar os arquivos estáticos do Django
     expose:
       - 8000  
     networks:
@@ -20,9 +20,9 @@ services:
     depends_on:
       - django
     volumes:
-      - ./staticfiles:/usr/share/nginx/html/static  
+      - ./staticfiles:/usr/share/nginx/html/static  # Arquivos estáticos
     ports:
-      - "80:80"  
+      - "80:80"  # Expondo a porta 80 para o acesso público
     networks:
       - app_network
 
