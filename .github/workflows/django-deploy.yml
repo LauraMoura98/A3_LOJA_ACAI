@@ -28,7 +28,6 @@ jobs:
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
             sudo git pull origin master
-            cd $BACKEND_DIR
             echo "Construindo Containers..."
             docker-compose build
             echo "Iniciando Containers..."
