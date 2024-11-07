@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   django:
     build:
@@ -7,10 +5,10 @@ services:
       dockerfile: Dockerfile.django
     container_name: django
     volumes:
-      - ./backend:/app
-      - ./staticfiles:/app/static  # Para acessar os arquivos estáticos do Django
+      - ./backend:/loja_acai
+      - ./staticfiles:/loja_acai/static  
     expose:
-      - 8000  # Expondo a porta interna do Gunicorn
+      - 8000  
     networks:
       - app_network
 
@@ -22,9 +20,9 @@ services:
     depends_on:
       - django
     volumes:
-      - ./staticfiles:/usr/share/nginx/html/static  # Arquivos estáticos
+      - ./staticfiles:/usr/share/nginx/html/static  
     ports:
-      - "80:80"  # Expondo a porta 80 para o acesso público
+      - "80:80"  
     networks:
       - app_network
 
