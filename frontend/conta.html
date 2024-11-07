@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+	<meta charset='UTF-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="static/js/tela.js" defer></script>
+	<script src="static/js/navbar.js" defer></script>
+	<script src="static/js/modal.js" defer></script>
+	
+	<title>
+	HOME - Açaí
+	</title>
+	
+</head>
+
+<body>
+
+<div class="fundo-navbar">
+	<div id="navbar-container"></div>
+</div>
+
+<br>
+<br>
+
+<div id="authSection" class="auth-section">
+    <div class="auth-tabs">
+        <button id="loginTab" class="auth-tab active">Login</button>
+        <button id="registerTab" class="auth-tab">Cadastro</button>
+    </div>
+
+    <!-- Formulário de Login -->
+    <form id="loginForm" class="auth-form">
+        <h2>Login</h2>
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="loginEmail" required>
+
+        <label for="loginPassword">Senha:</label>
+        <input type="password" id="loginPassword" name="loginPassword" required>
+
+        <button type="submit" class="cta-button">Entrar</button>
+    </form>
+
+    <!-- Formulário de Cadastro -->
+    <form id="registerForm" class="auth-form hidden">
+        <h2>Cadastro</h2>
+        <label for="registerName">Nome:</label>
+        <input type="text" id="registerName" name="registerName" required>
+
+        <label for="registerEmail">Email:</label>
+        <input type="email" id="registerEmail" name="registerEmail" required>
+
+        <label for="registerPassword">Senha:</label>
+        <input type="password" id="registerPassword" name="registerPassword" required>
+
+        <label for="confirmPassword">Confirmar Senha:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+        <button type="submit" class="cta-button">Cadastrar</button>
+    </form>
+</div>
+
+
+
+<br>
+<br>
+
+<!-- PLACEHOLDER PARA INFORMAÇÕES DA CONTA -->
+
+<br>
+<br>
+
+
+<div class="con-foo">
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <img src="static/img/acai-faseh.png" alt="Logo Açaí Faseh">
+			<img src="static/img/vector1.png" class="footer-vector">
+        </div>
+        <div class="footer-info">
+            <h4>VESPASIANO - MG</h4>
+            <p>R. São Paulo, 958 - Parque Jardim Alterosa</p>
+            <p>Telefone: (31) 0000-0000</p>
+            <p>WhatsApp: (31) 99999-0000</p>
+        </div>
+        <div class="footer-map">
+            <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3756.603732219963!2d-43.93785912555298!3d-19.686904430783176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa687f85e0075f1%3A0x8a39131cfa049b66!2sFaseh%20-%20Faculdade%20da%20Sa%C3%BAde%20e%20Ecologia%20Humana!5e0!3m2!1spt-BR!2sbr!4v1730055042244!5m2!1spt-BR!2sbr" width="300" height="225" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> -->
+			<!-- <img src="static/img/map.png" alt="Mapa de Localização"> -->
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>2024 | Todos os direitos reservados © Açaí Faseh</p>
+    </div>
+</footer>
+
+</div>
+
+</body>
+
+</html>
