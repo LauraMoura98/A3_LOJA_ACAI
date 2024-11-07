@@ -8,9 +8,9 @@ function loadResponsiveCSS() {
 
 	// Se a largura for menor que 768px, carrega o CSS para celulares
 	if (width < 768) {
-		link.href = "css/mobile.css"; // Certifique-se de que este arquivo CSS exista
+		link.href = "static/css/mobile.css"; // Certifique-se de que este arquivo CSS exista
 	} else {
-		link.href = "css/desktop.css"; // Certifique-se de que este arquivo CSS exista
+		link.href = "static/css/desktop.css"; // Certifique-se de que este arquivo CSS exista
 	}
 
 	document.head.appendChild(link);

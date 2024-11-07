@@ -13,12 +13,12 @@ function loadNavbar() {
                     <div></div>
                 </div>
                 <div class="menu" id="navbarMenu">
-                    <a href="#home">HOME</a>
-                    <a href="#pedido">FAÇA SEU PEDIDO</a>
+                    <a href="index.html">HOME</a>
+                    <a href="produtos.html">FAÇA SEU PEDIDO</a>
                     <a href="#contato">CONTATO</a>
                     <div class="nav-icons">
                         <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
-                        <a href="#conta"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
+                        <a href="conta.html"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
                     </div>
                 </div>
             </div>
@@ -28,13 +28,13 @@ function loadNavbar() {
             <div class="navbar">
                 <img src="static/img/Logo.png" class="logo" alt="Logo">
                 <div class="nav-links">
-                    <a href="#home">HOME</a>
-                    <a href="#pedido">FAÇA SEU PEDIDO</a>
+                    <a href="index.html">HOME</a>
+                    <a href="produtos.html">FAÇA SEU PEDIDO</a>
                     <a href="#contato">CONTATO</a>
                 </div>
                 <div class="nav-icons">
                     <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
-                    <a href="#conta"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
+                    <a href="conta.html"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
                 </div>
             </div>
         `;
