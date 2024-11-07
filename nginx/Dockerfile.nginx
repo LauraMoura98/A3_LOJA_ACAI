@@ -1,0 +1,14 @@
+# Use a imagem oficial do Nginx como base
+FROM nginx:alpine
+
+# Copie o arquivo de configuração do Nginx para o container
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Copie os arquivos estáticos do Django para o diretório do Nginx
+COPY backend/static /usr/share/nginx/html/static
+
+# Exponha a porta 80
+EXPOSE 80
+
+# Inicie o Nginx
+CMD ["nginx", "-g", "daemon off;"]

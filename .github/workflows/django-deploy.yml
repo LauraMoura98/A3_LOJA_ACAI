@@ -21,19 +21,19 @@ jobs:
           USER: 'ubuntu'      
           REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
           BACKEND_DIR: '/home/ubuntu/A3_LOJA_ACAI/backend'
-          IMAGE_NAME: 'django-backend'
+          BACKEND_CONTAINER: 'django'
+          NGINX_CONTAINER: 'nginx'
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
             sudo git pull origin master
             cd $BACKEND_DIR
-            echo "Construindo uma nova imagem Docker..."
-            docker build --no-cache -t $IMAGE_NAME .
-            echo "Atualizando o container..."
-            docker stop $IMAGE_NAME || true
-            docker rm $IMAGE_NAME || true
-            docker run -it -d --name $IMAGE_NAME -p 8000:8000 $IMAGE_NAME
+            echo "Construindo Containers..."
+            docker-compose build
+            echo "Iniciando Containers..."
+            docker-compose down
+            docker-compose up
             docker ps
-            docker logs $IMAGE_NAME
+            docker-compose logs -f BACKEND_CONTAINER NGINX_CONTAINER
           EOF
