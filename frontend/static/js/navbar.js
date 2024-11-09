@@ -15,7 +15,8 @@ function loadNavbar() {
                 <div class="menu" id="navbarMenu">
                     <a href="index.html">HOME</a>
                     <a href="produtos.html">FAÇA SEU PEDIDO</a>
-                    <a href="#contato">CONTATO</a>
+                    <a href="contato.html">CONTATO</a>
+					<a href="sobre.html">SOBRE</a>
                     <div class="nav-icons">
                         <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
                         <a href="conta.html"><img src="static/img/Conta.png" class="icon" alt="Conta"></a>
@@ -30,7 +31,8 @@ function loadNavbar() {
                 <div class="nav-links">
                     <a href="index.html">HOME</a>
                     <a href="produtos.html">FAÇA SEU PEDIDO</a>
-                    <a href="#contato">CONTATO</a>
+                    <a href="contato.html">CONTATO</a>
+					<a href="sobre.html">SOBRE</a>
                 </div>
                 <div class="nav-icons">
                     <a href="#carrinho"><img src="static/img/Carrinho.png" class="icon" alt="Carrinho"></a>
