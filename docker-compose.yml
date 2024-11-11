@@ -7,6 +7,7 @@ services:
     volumes:
       - ./backend:/app
       - ./staticfiles:/app/static  # Para acessar os arquivos estáticos do Django
+      - static_volume:/backend/loja_acai/static
     expose:
       - 8000  
     networks:
@@ -20,7 +21,7 @@ services:
     depends_on:
       - django
     volumes:
-      - ./staticfiles:/usr/share/nginx/html/static  # Arquivos estáticos
+      - static_volume:/backend/loja_acai/static  # Arquivos estáticos
     ports:
       - "80:80"  # Expondo a porta 80 para o acesso público
     networks:
