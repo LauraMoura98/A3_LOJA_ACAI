@@ -32,5 +32,6 @@ jobs:
             docker-compose build
             echo "Iniciando Containers..."
             docker-compose down
-            docker-compose up
+            docker-compose up --build -d > /dev/null 2>&1
+            docker ps
           EOF
