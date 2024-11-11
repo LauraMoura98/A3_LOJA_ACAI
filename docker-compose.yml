@@ -6,7 +6,6 @@ services:
     container_name: django
     volumes:
       - ./backend:/app
-      - ./staticfiles:/app/static  # Para acessar os arquivos estáticos do Django
       - static_volume:/backend/loja_acai/static
     expose:
       - 8000  
