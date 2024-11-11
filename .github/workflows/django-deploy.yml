@@ -34,5 +34,4 @@ jobs:
             docker-compose down
             docker-compose up
             docker ps
-            docker-compose logs -f BACKEND_CONTAINER NGINX_CONTAINER
           EOF
