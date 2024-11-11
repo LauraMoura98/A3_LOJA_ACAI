@@ -33,5 +33,4 @@ jobs:
             echo "Iniciando Containers..."
             docker-compose down
             docker-compose up
-            docker ps
           EOF
