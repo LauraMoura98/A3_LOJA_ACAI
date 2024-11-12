@@ -22,6 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -32,14 +33,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Build front-end
-        run: |
-          cd frontend
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Caminho correto para o diretório de build
-          path: './frontend/build/'
+          # Upload entire repository
+          path: './frontend/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
