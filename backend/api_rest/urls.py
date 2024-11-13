@@ -1,10 +1,11 @@
 from django.urls import path
 from api_rest.views.categorias_views import categorias_request_all, categorias_request_by_id
 from api_rest.views.produtos_views import produtos_request_all, produtos_request_by_id
-
-from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework import permissions
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -24,6 +25,7 @@ urlpatterns = [
     path("produtos/<int:id>/", produtos_request_by_id, name='produtos by id'),
     path("categorias/", categorias_request_all, name='categorias all'),
     path("categorias/<int:id>/", categorias_request_by_id, name='categorias by id'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc')
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
