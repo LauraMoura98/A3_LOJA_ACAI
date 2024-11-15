@@ -9,7 +9,7 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 - Implementação dos atributo de `Acrescimo` no models de `Produtos`
 - Implementação de JWT temporário para autenticação da API
 
-## Corrigidos
+### Corrigido
 - Correções nas Views de `Produtos`, especificamente nas endpoints de ID
 
 ### Alterado
