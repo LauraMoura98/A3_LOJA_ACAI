@@ -26,7 +26,7 @@ urlpatterns = [
     path("categorias/", categorias_geral, name='Requisições gerais de Categoria'),
     path("categorias/<int:id>/", categorias_por_id, name='Requisições por ID de Categoria'),
     path("acrescimos/", acrescimos_geral, name='Requisições Gerais de Acrescimos'),
-    path("acrescimos/<int:id>", acrescimos_por_id, name='Requisições por ID de Acrescimos'),
+    path("acrescimos/<int:id>/", acrescimos_por_id, name='Requisições por ID de Acrescimos'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
