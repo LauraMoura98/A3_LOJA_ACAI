@@ -10,6 +10,35 @@ class ProdutoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+    def valida_acrescimos(self, value):
+        """
+        Valida que os nomes dos acréscimos existem no banco de dados e retorna os objetos
+        correspondentes.
+        """
+        acr_items = []
+        for nome in value:
+            try:
+                acrescimo = Acrescimos.objects.get(nome=nome, disponivel=True)
+                acr_items.append(acrescimo)
+            except Acrescimos.DoesNotExist:
+                raise serializers.ValidationError(f"Acréscimo '{nome}' não encontrado ou não disponível.")
+        return acr_items
+
+    def valida_categorias(self, value):
+        """
+        Valida que os nomes das Categorias existem no banco de dados e retorna os objetos
+        correspondentes.
+        """
+        cat_items = []
+        for nome in value:
+            try:
+                categorias = Categoria.objects.get(nome=nome, disponivel=True)
+                cat_items.append(categorias)
+            except Categoria.DoesNotExist:
+                raise serializers.ValidationError(f"Acréscimo '{nome}' não encontrado ou não disponível.")
+        return cat_items
+
+
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
