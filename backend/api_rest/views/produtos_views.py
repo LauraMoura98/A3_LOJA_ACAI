@@ -36,7 +36,7 @@ from api_rest.serializers import ProdutoSerializer
 @api_view(['GET', 'DELETE', 'PUT'])
 def produtos_por_id(request, id):
     try:
-        produto = Produto.objects.all(pk=id)
+        produto = Produto.objects.get(pk=id)
     except Produto.DoesNotExist:
         return Response({
             "erro": "Produto não encontrado."
