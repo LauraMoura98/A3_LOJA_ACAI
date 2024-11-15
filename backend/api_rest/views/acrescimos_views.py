@@ -93,3 +93,4 @@ def acrescimos_geral(request):
         return Response(serializer.data)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
