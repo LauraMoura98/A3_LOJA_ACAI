@@ -88,7 +88,7 @@ def acrescimos_geral(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     elif request.method == "GET":
-        produtos = Acrescimosc.objects.all()
+        produtos = Acrescimos.objects.all()
         serializer = AcrescimoSerializer(produtos, many=True)
         return Response(serializer.data)
 
