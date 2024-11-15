@@ -9,7 +9,6 @@ class ProdutoSerializer(serializers.ModelSerializer):
         model = Produto
         fields = '__all__'
 
-
     def valida_acrescimos(self, value):
         """
         Valida que os nomes dos acréscimos existem no banco de dados e retorna os objetos
