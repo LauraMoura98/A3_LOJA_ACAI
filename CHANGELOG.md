@@ -6,7 +6,7 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Adicionado
 - Implementação de endpoints na API para `Acrescimos`
-- Implementação dos atributo de `Acrescimo` no models de `Produtos`
+- Implementação dos atributo de `Acrescimos` no models de `Produtos`
 - Implementação de JWT temporário para autenticação da API
 
 ### Corrigido

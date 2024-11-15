@@ -40,12 +40,16 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
+    produtos = serializers.SlugRelatedField(slug_field='nome', queryset=Produto.objects.all())
+
     class Meta:
         model = Categoria
         fields = '__all__'
 
 
 class AcrescimoSerializer(serializers.ModelSerializer):
+    acrescimos = serializers.SlugRelatedField(slug_field='nome', queryset=Acrescimos.objects.all())
+
     class Meta:
         model = Acrescimos
         fields = '__all__'
