@@ -36,7 +36,7 @@ from api_rest.serializers import AcrescimoSerializer
 @api_view(['GET', 'DELETE', 'PUT'])
 def acrescimos_por_id(request, id):
     try:
-        acrescimo = Acrescimos.objects.all(pk=id)
+        acrescimo = Acrescimos.objects.get(pk=id)
     except Acrescimos.DoesNotExist:
         return Response({
             "erro": "Produto não encontrado."
