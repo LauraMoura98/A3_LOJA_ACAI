@@ -28,6 +28,7 @@ jobs:
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
             sudo git pull origin master
+            docker rmi -f $(docker images -q)
             echo "Construindo Containers..."
             docker-compose build
             echo "Iniciando Containers..."
