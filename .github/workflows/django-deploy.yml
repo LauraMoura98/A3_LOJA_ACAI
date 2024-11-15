@@ -25,14 +25,23 @@ jobs:
           NGINX_CONTAINER: 'nginx'
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-            cd $REPO_DIR
-            echo "Fazendo pull do código mais recente..."
-            sudo git pull origin master
-            echo "Construindo Containers..."
-            docker-compose build
-            echo "Iniciando Containers..."
-            docker-compose down
-            docker-compose up --build -d > /dev/null 2>&1
-            docker rmi $(docker images -q)
-            docker ps
+          cd $REPO_DIR
+          echo "Fazendo pull do código mais recente..."
+          sudo git pull origin master
+
+          echo "Construindo Containers..."
+          docker-compose build
+
+          echo "Parando e removendo containers antigos..."
+          docker-compose down
+
+          echo "Iniciando Containers..."
+          docker-compose up --build -d > /dev/null 2>&1
+
+          echo "Removendo imagens antigas não utilizadas..."
+          docker image prune -f
+
+          echo "Listando containers e imagens..."
+          docker ps
+          docker images
           EOF
