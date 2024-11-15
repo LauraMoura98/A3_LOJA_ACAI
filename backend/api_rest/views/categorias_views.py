@@ -35,7 +35,7 @@ from api_rest.serializers import CategoriaSerializer
         }
 )
 @api_view(['GET', 'DELETE', 'PUT'])
-def categorias_request_by_id(request, id):
+def categorias_por_id(request, id):
     try:
         categoria = Categoria.objects.get(pk=id)
     except Categoria.DoesNotExist:
@@ -84,7 +84,7 @@ def categorias_request_by_id(request, id):
     responses={201: CategoriaSerializer, 400: 'Erro de validação'}
 )
 @api_view(['GET', 'POST'])
-def categorias_request_all(request):
+def categorias_geral(request):
 
     if request.method == 'GET':
         categorias = Categoria.objects.all()

@@ -35,7 +35,7 @@ from api_rest.serializers import ProdutoSerializer
     }
 )
 @api_view(['GET', 'DELETE', 'PUT'])
-def produtos_request_by_id(request, id):
+def produtos_por_id(request, id):
     try:
         produto = Produto.objects.all(pk=id)
     except Produto.DoesNotExist:
@@ -81,7 +81,7 @@ def produtos_request_by_id(request, id):
     operation_description='GET api/v1/produtos/',
 )
 @api_view(["POST", "GET"])
-def produtos_request_all(request):
+def produtos_geral(request):
     if request.method == "POST":
         serializer = ProdutoSerializer(data=request.data)
         if serializer.is_valid():

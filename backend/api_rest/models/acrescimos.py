@@ -8,3 +8,4 @@ class Acrescimos(models.Model):
             decimal_places=2,
             default=0.00
         )
+    disponivel = models.BooleanField(default=True)
