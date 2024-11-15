@@ -1,5 +1,6 @@
 from django.db import models
 from .categoria import Categoria
+from .acrescimos import Acrescimos
 
 
 class Produto(models.Model):
@@ -9,3 +10,4 @@ class Produto(models.Model):
     disponibilidade = models.BooleanField(default=True)
     imagem_url = models.CharField(max_length=255, blank=True, null=True, default="")
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    acrescimos = models.ManyToManyField(Acrescimos, blank=True, related_name="produtos")
