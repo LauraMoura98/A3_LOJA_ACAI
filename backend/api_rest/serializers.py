@@ -5,13 +5,13 @@ from .models.acrescimos import Acrescimos
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
-    categorias = serializers.SlugRelatedField(slug_field='nome', queryset=Categoria.objects.all())
-    acrescimos = serializers.SlugRelatedField(slug_field='nome', queryset=Acrescimos.objects.all())
 
     class Meta:
         model = Produto
         fields = '__all__'
 
+    categorias = serializers.SlugRelatedField(slug_field='nome', queryset=Categoria.objects.all())
+    acrescimos = serializers.SlugRelatedField(slug_field='nome', queryset=Acrescimos.objects.all())
     def valida_acrescimos(self, value):
         """
         Valida que os nomes dos acréscimos que existem no banco de dados e retorna os objetos
