@@ -27,7 +27,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             sudo mkdir -p /var/lib/db_data
             sudo chmod 777 /var/lib/db_data
-            EOF
+          EOF
 
       - name: Realizar Pull de Repositório do Github
         run: 
@@ -35,7 +35,7 @@ jobs:
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
             sudo git pull origin master
-            EOF
+          EOF
 
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
