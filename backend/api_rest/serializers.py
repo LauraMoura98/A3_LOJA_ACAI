@@ -37,3 +37,4 @@ class AcrescimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Acrescimos
         fields = '__all__'
+
