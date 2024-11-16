@@ -10,6 +10,8 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Corrigido
 - Correções nas chamadas de chaves estrangeiras no model de `Produtos`
+
+### Alterado
 - Refatoração de workflow do Github Actions em mais steps para melhor legibilidade
 
 ## [2024-11-15]
