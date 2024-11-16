@@ -2,6 +2,14 @@
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
 
+## [2024-11-16]
+
+### Adicionado
+- Implementação de um volume do banco de dados sqlite para que os dados persistam em cada deploy
+
+### Corrigido
+- Correções nas chamadas de chaves estrangeiras no model de `Produtos`
+
 ## [2024-11-15]
 
 ### Adicionado
