@@ -5,7 +5,6 @@ from .models.acrescimos import Acrescimos
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
-    # SlugRelatedField resolve o nome automaticamente para o objeto correspondente
     categoria = serializers.SlugRelatedField(
         slug_field='nome',
         queryset=Categoria.objects.all()
