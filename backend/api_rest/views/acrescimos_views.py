@@ -81,15 +81,16 @@ def acrescimos_por_id(request, id):
 )
 @api_view(["POST", "GET"])
 def acrescimos_geral(request):
-    if request.method == "POST":
+
+    if request.method == "GET":
+        acrescimos = Acrescimos.objects.all()
+        serializer = AcrescimoSerializer(acrescimos, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == "POST":
         serializer = AcrescimoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    elif request.method == "GET":
-        acrescimos = Acrescimos.objects.all()
-        serializer = AcrescimoSerializer(acrescimos, many=True)
-        return Response(serializer.data)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)

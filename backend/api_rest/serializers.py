@@ -5,9 +5,16 @@ from .models.acrescimos import Acrescimos
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
-    # Usando SlugRelatedField para categorias e acréscimos
-    categoria = serializers.SlugRelatedField(slug_field='nome', queryset=Categoria.objects.all())
-    acrescimos = serializers.SlugRelatedField(slug_field='nome', queryset=Acrescimos.objects.all())
+    # SlugRelatedField resolve o nome automaticamente para o objeto correspondente
+    categoria = serializers.SlugRelatedField(
+        slug_field='nome',
+        queryset=Categoria.objects.all()
+    )
+    acrescimos = serializers.SlugRelatedField(
+        slug_field='nome',
+        queryset=Acrescimos.objects.filter(disponivel=True),
+        many=True  # Permite uma lista de acréscimos
+    )
 
     class Meta:
         model = Produto
@@ -19,34 +26,6 @@ class ProdutoSerializer(serializers.ModelSerializer):
             'categoria',
             'acrescimos',
         ]
-
-    def valida_acrescimos(self, value):
-        """
-        Valida que os nomes dos acréscimos que existem no banco de dados e retorna os objetos
-        correspondentes.
-        """
-        acr_items = []
-        for nome in value:
-            try:
-                acrescimo = Acrescimos.objects.get(nome=nome, disponivel=True)
-                acr_items.append(acrescimo)
-            except Acrescimos.DoesNotExist:
-                raise serializers.ValidationError(f"Acréscimo '{nome}' não encontrado ou não disponível.")
-        return acr_items
-
-    def valida_categorias(self, value):
-        """
-        Valida que os nomes das Categorias existem no banco de dados e retorna os objetos
-        correspondentes.
-        """
-        cat_items = []
-        for nome in value:
-            try:
-                categorias = Categoria.objects.get(nome=nome, disponivel=True)
-                cat_items.append(categorias)
-            except Categoria.DoesNotExist:
-                raise serializers.ValidationError(f"Acréscimo '{nome}' não encontrado ou não disponível.")
-        return cat_items
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
