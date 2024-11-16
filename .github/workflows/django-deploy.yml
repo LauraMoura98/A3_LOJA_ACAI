@@ -22,19 +22,21 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Configurar Volume de Banco de Dados
-        run: |
-          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-            sudo mkdir -p /var/lib/db_data
-            sudo chmod 777 /var/lib/db_data
-          EOF
-
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
+            sudo su
+            if [[ $(git status --porcelain) ]]; then
+              echo "Mudanças encontradas. Realizando commit e push..."
+              git add .
+              git commit -m "DB_CHANGES"
+              git push origin master
+            else
+              echo "Nenhuma mudança encontrada. Pulando o commit e o push."
+            fi
             echo "Fazendo pull do código mais recente..."
-            sudo git pull origin master
+            git pull origin master
           EOF
 
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
