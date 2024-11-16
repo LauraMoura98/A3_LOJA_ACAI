@@ -12,7 +12,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
     acrescimos = serializers.SlugRelatedField(
         slug_field='nome',
         queryset=Acrescimos.objects.filter(disponivel=True),
-        many=True  # Permite uma lista de acréscimos
+        many=True
     )
 
     class Meta:
@@ -37,4 +37,3 @@ class AcrescimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Acrescimos
         fields = '__all__'
-
