@@ -10,7 +10,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Produto
-        fields = '__all__'
+        fields = ['nome', 'descricao', 'disponibilidade', 'imagem_url', 'categoria', 'acrescimos']
 
     def valida_acrescimos(self, value):
         """
