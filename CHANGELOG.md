@@ -6,9 +6,11 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Adicionado
 - Implementação de um volume do banco de dados sqlite para que os dados persistam em cada deploy
+- Implementação de deploy do Front-End com Vercel
 
 ### Corrigido
 - Correções nas chamadas de chaves estrangeiras no model de `Produtos`
+- Refatoração de workflow do Github Actions em mais steps para melhor legibilidade
 
 ## [2024-11-15]
 
