@@ -27,13 +27,13 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
             sudo su
-            if [[ $(git status --porcelain) ]]; then
+            if git diff-index --quiet HEAD --; then
+              echo "Nenhuma mudança encontrada. Pulando o commit e o push."
+            else
               echo "Mudanças encontradas. Realizando commit e push..."
               git add .
               git commit -m "DB_CHANGES"
               git push origin master
-            else
-              echo "Nenhuma mudança encontrada. Pulando o commit e o push."
             fi
             echo "Fazendo pull do código mais recente..."
             git pull origin master
