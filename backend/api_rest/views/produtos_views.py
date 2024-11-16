@@ -4,6 +4,7 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 
 from api_rest.models import Produto
+from api_rest.models import Acrescimos, Categoria
 from api_rest.serializers import ProdutoSerializer
 
 
@@ -61,6 +62,24 @@ def produtos_por_id(request, id):
             )
 
     elif request.method == 'PUT':
+        if isinstance(request.data.get('categoria'), str):
+            categoria_slug = request.data.get('categoria')
+            try:
+                categoria_obj = Categoria.objects.get(slug=categoria_slug)
+                request.data['categoria'] = categoria_obj.pk  # Atualiza com o ID da categoria
+            except Categoria.DoesNotExist:
+                return Response({"erro": "Categoria não encontrada."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if isinstance(request.data.get('acrescimos'), list):
+            acrescimos_slugs = []
+            for nome in request.data.get('acrescimos'):
+                try:
+                    acrescimo = Acrescimos.objects.get(slug=nome)
+                    acrescimos_slugs.append(acrescimo.pk)  # Adiciona o ID dos acréscimos
+                except Acrescimos.DoesNotExist:
+                    return Response({"erro": f"Acréscimo '{nome}' não encontrado."}, status=status.HTTP_400_BAD_REQUEST)
+            request.data['acrescimos'] = acrescimos_slugs
+
         serializer = ProdutoSerializer(
             produto,
             data=request.data,
