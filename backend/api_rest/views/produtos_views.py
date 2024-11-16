@@ -41,10 +41,12 @@ def produtos_por_id(request, id):
         return Response({
             "erro": "Produto não encontrado."
             }, status=status.HTTP_404_NOT_FOUND
-            )
+        )
+
     if request.method == 'GET':
         serializer = ProdutoSerializer(produto)
         return Response(serializer.data)
+
     elif request.method == 'DELETE':
         try:
             produto.delete()
@@ -54,9 +56,10 @@ def produtos_por_id(request, id):
             )
         except Exception as e:
             return Response({
-                "erro": f"Erro {e} ao tentar deletar produto."
+                "erro": f"Erro ao tentar deletar produto: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
     elif request.method == 'PUT':
         serializer = ProdutoSerializer(
             produto,
@@ -66,7 +69,7 @@ def produtos_por_id(request, id):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_RESQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @swagger_auto_schema(
@@ -84,12 +87,22 @@ def produtos_geral(request):
     if request.method == "POST":
         serializer = ProdutoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response(
+                    {"erro": f"Erro ao salvar o produto: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "GET":
         produtos = Produto.objects.all()
         serializer = ProdutoSerializer(produtos, many=True)
         return Response(serializer.data)
 
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response(
+        {"erro": "Método não permitido."},
+        status=status.HTTP_405_METHOD_NOT_ALLOWED
+    )
