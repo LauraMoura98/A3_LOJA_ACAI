@@ -30,7 +30,7 @@ jobs:
           EOF
 
       - name: Realizar Pull de Repositório do Github
-        run: 
+        run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
             cd $REPO_DIR
             echo "Fazendo pull do código mais recente..."
