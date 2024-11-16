@@ -8,6 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
+      USER: 'ubuntu'      
+      REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
+      BACKEND_DIR: '/home/ubuntu/A3_LOJA_ACAI/backend'
+      BACKEND_CONTAINER: 'django'
+      NGINX_CONTAINER: 'nginx'
 
     steps:
       - name: Configurar SSH para Acesso ao Servidor
@@ -15,19 +22,24 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Conectar, Fazer Pull e Construir Imagem no Servidor
-        env:
-          HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
-          USER: 'ubuntu'      
-          REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
-          BACKEND_DIR: '/home/ubuntu/A3_LOJA_ACAI/backend'
-          BACKEND_CONTAINER: 'django'
-          NGINX_CONTAINER: 'nginx'
+      - name: Configurar Volume de Banco de Dados
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-          cd $REPO_DIR
-          echo "Fazendo pull do código mais recente..."
-          sudo git pull origin master
+            sudo mkdir -p /var/lib/db_data
+            sudo chmod 777 /var/lib/db_data
+            EOF
+
+      - name: Realizar Pull de Repositório no Github
+        run: 
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+            cd $REPO_DIR
+            echo "Fazendo pull do código mais recente..."
+            sudo git pull origin master
+            EOF
+
+      - name: Conectar, Fazer Pull e Construir Imagem no Servidor
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
 
           echo "Construindo Containers..."
           docker-compose build
