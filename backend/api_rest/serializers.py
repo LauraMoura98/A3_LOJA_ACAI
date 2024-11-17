@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models.produto import Produto
 from .models.categoria import Categoria
 from .models.acrescimos import Acrescimos
+from .models.tamanho import Tamanho
+from .models.tamanho_produto import TamanhoProduto
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -36,4 +38,18 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class AcrescimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Acrescimos
+        fields = '__all__'
+
+
+class TamanhoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tamanho
+        fields = '__all__'
+
+
+class TamanhoProdutoSerializer(serializers.ModelSerializer):
+    tamanho = TamanhoSerializer()
+
+    class Meta:
+        model = TamanhoProduto
         fields = '__all__'
