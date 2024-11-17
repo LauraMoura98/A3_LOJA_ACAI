@@ -2,7 +2,7 @@ from django.urls import path
 from api_rest.views.categorias_views import categorias_geral, categorias_por_id
 from api_rest.views.produtos_views import produtos_geral, produtos_por_id
 from api_rest.views.acrescimos_views import acrescimos_geral, acrescimos_por_id
-from api_rest.views import tamanhos_por_id, tamanhos_geral
+from api_rest.views.tamanho_views import tamanhos_por_id, tamanhos_geral
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
