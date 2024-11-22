@@ -2,6 +2,15 @@
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
 
+## [2024-11-17]
+
+### Adicionado
+- Implementação de endpoints na API para `Tamanhos`
+
+### TODO
+- Implementar Banco de Dados Relacional (não integrado com Django) para melhor tráfego de dados.
+- Implementar endpoints de `TamanhoProduto`
+
 ## [2024-11-16]
 
 ### Adicionado
@@ -10,6 +19,8 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Corrigido
 - Correções nas chamadas de chaves estrangeiras no model de `Produtos`
+
+### Alterado
 - Refatoração de workflow do Github Actions em mais steps para melhor legibilidade
 
 ## [2024-11-15]

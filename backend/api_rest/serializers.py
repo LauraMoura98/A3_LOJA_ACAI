@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models.produto import Produto
 from .models.categoria import Categoria
 from .models.acrescimos import Acrescimos
+from .models.tamanho import Tamanho
+from .models.tamanho_produto import TamanhoProduto
 
 
 class ProdutoSerializer(serializers.ModelSerializer):
@@ -12,7 +14,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
     acrescimos = serializers.SlugRelatedField(
         slug_field='nome',
         queryset=Acrescimos.objects.filter(disponivel=True),
-        many=True  # Permite uma lista de acréscimos
+        many=True
     )
 
     class Meta:
@@ -38,12 +40,21 @@ class AcrescimoSerializer(serializers.ModelSerializer):
         model = Acrescimos
         fields = '__all__'
 
-class TamanhoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tamanho
-        fields = ['id', 'nome', 'valor']
 
 class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido
         fields = ['id', 'cliente', 'data', 'valor_total', 'status']
+
+class TamanhoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tamanho
+        fields = '__all__'
+
+
+class TamanhoProdutoSerializer(serializers.ModelSerializer):
+    tamanho = TamanhoSerializer()
+
+    class Meta:
+        model = TamanhoProduto
+        fields = '__all__'
