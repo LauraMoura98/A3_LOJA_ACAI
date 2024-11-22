@@ -2,9 +2,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
-from api_rest.models import Tamanho
-from api_rest.serializers import TamanhoSerializer
-
 
 @swagger_auto_schema(
     method='get',
@@ -41,31 +38,4 @@ def tamanhos_por_id(request, id):
         serializer = TamanhoSerializer(tamanho, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@swagger_auto_schema(
-    method='post',
-    request_body=TamanhoSerializer,
-    operation_description='POST api/v1/tamanhos/',
-    responses={201: TamanhoSerializer, 400: 'Erro de Validação.'}
-)
-@swagger_auto_schema(
-    method='get',
-    operation_description='GET api/v1/tamanhos/',
-)
-@api_view(["POST", "GET"])
-def tamanhos_geral(request):
-    if request.method == "GET":
-        tamanhos = Tamanho.objects.all()
-        serializer = TamanhoSerializer(tamanhos, many=True)
-        return Response(serializer.data)
-
-    elif request.method == "POST":
-        serializer = TamanhoSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 

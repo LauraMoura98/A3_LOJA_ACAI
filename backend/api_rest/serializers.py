@@ -41,6 +41,11 @@ class AcrescimoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PedidoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pedido
+        fields = ['id', 'cliente', 'data', 'valor_total', 'status']
+
 class TamanhoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tamanho
