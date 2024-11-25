@@ -54,7 +54,7 @@ def tamanhos_por_id(request, id):
     operation_description='GET api/v1/Tamanhos/',
 )
 @api_view(["POST", "GET"])
-def Tamanhos_geral(request):
+def tamanhos_geral(request):
     if request.method == "GET":
         Tamanhos = Tamanho.objects.all()
         serializer = TamanhoSerializer(Tamanhos, many=True)
