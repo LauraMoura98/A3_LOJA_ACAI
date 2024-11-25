@@ -1,6 +1,13 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+
+## [2024-11-25]
+
+### Adicionado
+- Implementação de endpoints na API para `Tamanho_produtos`
+- shell script para inicio automático de containers na instancia ao reiniciar a máquina
+
 ## [2024-11-21]
 
 ### Adicionado
