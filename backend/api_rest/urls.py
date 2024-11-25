@@ -3,6 +3,7 @@ from api_rest.views.categorias_views import categorias_geral, categorias_por_id
 from api_rest.views.produtos_views import produtos_geral, produtos_por_id
 from api_rest.views.acrescimos_views import acrescimos_geral, acrescimos_por_id
 from api_rest.views.tamanho_views import tamanhos_por_id, tamanhos_geral
+from api_rest.views.pedido_views import pedidos_geral, pedidos_por_id
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -30,6 +31,8 @@ urlpatterns = [
     path("acrescimos/<int:id>/", acrescimos_por_id, name='Requisições por ID de Acrescimos'),
     path('tamanhos/', tamanhos_geral, name='tamanhos_geral'),
     path('tamanhos/<int:id>/', tamanhos_por_id, name='tamanhos_por_id'),
+    path('pedidos/', pedidos_geral, name='pedidos_geral'),
+    path('pedidos/<int:id>/', pedidos_por_id, name='pedidos_por_id'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

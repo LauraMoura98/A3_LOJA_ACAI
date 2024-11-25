@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Pedido(models.Model):
     STATUS_PEDIDO = [
         ('PENDENTE', 'Pendente'),

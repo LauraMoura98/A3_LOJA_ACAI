@@ -2,10 +2,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
-from .models import Pedido
-from .serializers import PedidoSerializer
 
-# Consultar todos os Pedidos (GET) e Criar um Pedido (POST)
+from api_rest.models import Pedido
+from api_rest.serializers import PedidoSerializer
+
+
 @swagger_auto_schema(
     method='post',
     request_body=PedidoSerializer,
@@ -22,7 +23,7 @@ def pedidos_geral(request):
         pedidos = Pedido.objects.all()
         serializer = PedidoSerializer(pedidos, many=True)
         return Response(serializer.data)
-    
+
     elif request.method == "POST":
         serializer = PedidoSerializer(data=request.data)
         if serializer.is_valid():
@@ -31,7 +32,6 @@ def pedidos_geral(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Consultar, Atualizar (PUT) e Deletar (DELETE) Pedido por ID
 @swagger_auto_schema(
     method='get',
     operation_description='GET api/v1/pedidos/{id}',

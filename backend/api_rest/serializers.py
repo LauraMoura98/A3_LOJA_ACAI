@@ -3,6 +3,7 @@ from .models.produto import Produto
 from .models.categoria import Categoria
 from .models.acrescimos import Acrescimos
 from .models.tamanho import Tamanho
+from .models.pedido import Pedido
 from .models.tamanho_produto import TamanhoProduto
 
 
@@ -44,7 +45,8 @@ class AcrescimoSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido
-        fields = ['id', 'cliente', 'data', 'valor_total', 'status']
+        fields = '__all__'
+
 
 class TamanhoSerializer(serializers.ModelSerializer):
     class Meta:
