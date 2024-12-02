@@ -64,7 +64,7 @@ ROOT_URLCONF = 'loja_acai.urls'
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'https://acai-faseh.vercel.app/'
+    'https://acai-faseh.vercel.app',
 ]
 
 TEMPLATES = [
