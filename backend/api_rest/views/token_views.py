@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 
+
 @api_view(['GET'])
 def generate_token(request):
 
