@@ -1,8 +1,14 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-03]
+
+### Modificado
+- Nomes, apenas nome e sobrenome no site
+- Criado começo da integração da parte de administração
 
 ## [2024-12-02]
+
 ### Adicionado
 - Widget de acessibilidade
 
