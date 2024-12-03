@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def generate_token(request):
 
     username = settings.API_USERNAME
