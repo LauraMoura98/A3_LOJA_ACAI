@@ -1,6 +1,27 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-03]
+
+### Modificado
+- Nomes, apenas nome e sobrenome no site
+- Criado começo da integração da parte de administração
+
+## [2024-12-02]
+
+### Adicionado
+- Widget de acessibilidade
+
+### Alterado
+- Favicon via static
+- Texto na página inicial no lugar do lorem ipsilum
+- História e missão da empresa no sobre
+- Link no botão na home que redireciona para produtos
+- Nomes dos membros do grupo
+
+### TODO
+-  Galeria com os membros do grupo e professores no sobre
+-  Página funcional de administração do catálogo
 
 ## [2024-11-25]
 

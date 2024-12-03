@@ -1,7 +1,7 @@
 $(document).ready(function() {
     // URLs da API
-    const apiURLProdutos = "http://127.0.0.1:8000/api/v1/produtos/?format=json";
-    const apiURLCategoria = "http://127.0.0.1:8000/api/v1/categorias/";
+    const apiURLProdutos = "http://168.75.72.27/api/v1/produtos/";
+    const apiURLCategoria = "http://168.75.72.27/api/v1/categorias/";
 
     // Objeto para armazenar os nomes das categorias
     const categoriaNomes = {};
@@ -84,7 +84,7 @@ $(document).ready(function() {
                 });
             },
             error: function() {
-                $("#lista-produtos").html("<p>Erro ao carregar produtos.</p>");
+                $("#lista-produtos").html("<p>Erro ao carregar produtos. Servidor offline.</p>");
             }
         });
     }
