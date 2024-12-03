@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-import os
-import oci
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,34 +162,6 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-}
-
-
-# Configurar o cliente do Oracle Cloud
-vault_client = oci.secrets.SecretsClient({
-    "region": os.getenv("OCI_REGION"),
-    "tenancy": os.getenv("OCI_TENANCY_OCID"),
-    "user": os.getenv("OCI_USER_OCID"),
-    "key_file": os.getenv("OCI_KEY_FILE"),
-    "fingerprint": os.getenv("OCI_FINGERPRINT"),
-})
-
-
-def get_secret_value(secret_id):
-    secret_bundle = vault_client.get_secret_bundle(secret_id)
-    return secret_bundle.data.secret_bundle_content.content.decode("utf-8")
-
-
-# Recuperar os secrets
-API_USERNAME = get_secret_value(os.getenv("API_USERNAME_OCID"))
-API_PASSWORD = get_secret_value(os.getenv("API_PASSWORD_OCID"))
-
-# Adicionar os dados às configurações Django
-AUTH_API = {
-    "username": API_USERNAME,
-    "password": API_PASSWORD,
 }
