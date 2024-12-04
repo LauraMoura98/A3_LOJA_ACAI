@@ -1,6 +1,7 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from drf_yasg.utils import swagger_auto_schema
 
@@ -35,6 +36,7 @@ from api_rest.serializers import CategoriaSerializer
         }
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def categorias_por_id(request, id):
     try:
         categoria = Categoria.objects.get(pk=id)
@@ -84,6 +86,7 @@ def categorias_por_id(request, id):
     responses={201: CategoriaSerializer, 400: 'Erro de validação'}
 )
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def categorias_geral(request):
 
     if request.method == 'GET':
