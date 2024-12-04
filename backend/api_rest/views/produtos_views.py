@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
@@ -6,12 +6,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import Produto
 from api_rest.serializers import ProdutoSerializer
-
-
-def get_permissions(self):
-    if self.request.method == 'GET':
-        return [AllowAny()]
-    return [IsAuthenticated()]
 
 
 @swagger_auto_schema(
@@ -41,38 +35,27 @@ def get_permissions(self):
     }
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def produtos_por_id(request, id):
     try:
         produto = Produto.objects.get(pk=id)
     except Produto.DoesNotExist:
         return Response({
             "erro": "Produto não encontrado."
-            }, status=status.HTTP_404_NOT_FOUND
-        )
+        }, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = ProdutoSerializer(produto)
         return Response(serializer.data)
 
     elif request.method == 'DELETE':
-        try:
-            produto.delete()
-            return Response({
-                "mensagem": "Produto deletado com sucesso."
-                }, status=status.HTTP_204_NO_CONTENT
-            )
-        except Exception as e:
-            return Response({
-                "erro": f"Erro ao tentar deletar produto: {str(e)}"
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        produto.delete()
+        return Response({
+            "mensagem": "Produto deletado com sucesso."
+        }, status=status.HTTP_204_NO_CONTENT)
 
     elif request.method == 'PUT':
-        serializer = ProdutoSerializer(
-            produto,
-            data=request.data,
-            partial=True
-        )
+        serializer = ProdutoSerializer(produto, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -90,18 +73,13 @@ def produtos_por_id(request, id):
     operation_description='GET api/v1/produtos/',
 )
 @api_view(["POST", "GET"])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def produtos_geral(request):
     if request.method == "POST":
         serializer = ProdutoSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                return Response(
-                    {"erro": f"Erro ao salvar o produto: {str(e)}"},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == "GET":
