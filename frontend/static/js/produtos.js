@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // URLs da API
-    const apiURLProdutos = "http://168.75.72.27/api/v1/produtos/";
+    const apiURLProdutos = "http://168.75.72.27/api/v1/produtos/?format=json";
     const apiURLCategoria = "http://168.75.72.27/api/v1/categorias/";
 
     // Objeto para armazenar os nomes das categorias
