@@ -2,9 +2,16 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import Produto
 from api_rest.serializers import ProdutoSerializer
+
+
+def get_permissions(self):
+    if self.request.method == 'GET':
+        return [AllowAny()]
+    return [IsAuthenticated()]
 
 
 @swagger_auto_schema(
