@@ -1,6 +1,14 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-04]
+
+### Adicionado
+- Galeria dos membros na página sobre
+
+### TODO
+- Adicionar fotos restantes
+
 ## [2024-12-03]
 
 ### Modificado
