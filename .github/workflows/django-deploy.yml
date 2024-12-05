@@ -27,7 +27,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             set -e  # Para garantir que o script pare em caso de erro
             cd $REPO_DIR
-      
+            ls
             echo "Fazendo pull do código mais recente..."
             git pull origin master
       
