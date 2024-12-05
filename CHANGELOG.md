@@ -8,6 +8,13 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### TODO
 - Adicionar fotos restantes
+- Corrigir statics
+- Fazer páginas de administração
+- Terminar de adicionar GET públicos
+- Verificar banco de dados
+- Criar método de atutenticar usuário
+- Parte de pedidos vinculados à usuário
+- Css dinâmico
 
 ## [2024-12-03]
 
