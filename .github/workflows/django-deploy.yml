@@ -11,7 +11,7 @@ jobs:
     env:
       HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
       USER: 'ubuntu'      
-      REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
+      REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI/' 
 
     steps:
       - name: Configurar SSH para Acesso ao Servidor
@@ -22,8 +22,6 @@ jobs:
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-            set -e
-            ls
             cd $REPO_DIR
             ls
             echo "Fazendo pull do código mais recente..."
