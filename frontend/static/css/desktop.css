@@ -28,7 +28,7 @@ body {
     width: 150px; /* Define a largura da logo */
     margin-left: 20px; /* Coloca a logo levemente fora da navbar para dar o efeito desejado */
     position: relative;
-    /* top: -10px; /* Levanta a logo ligeiramente para "saltar" da navbar */ */
+    /* top: -10px; /* Levanta a logo ligeiramente para "saltar" da navbar */
 }
 
 .nav-links {
