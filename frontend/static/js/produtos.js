@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // URLs da API
-    const apiURLProdutos = "https://kong-c60ea9bb47us5w2cp.kongcloud.dev/acai-faseh-api/";
-    const apiURLCategoria = "http://168.75.72.27/api/v1/categorias/";
+    const apiURLProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/produtos/";
+    const apiURLCategoria = "https://kong-6266dc6838uss9iu0.kongcloud.dev/categorias/";
 
     // Função para buscar categorias e comparar com produtos
     function buscarProdutosPorCategoria() {
