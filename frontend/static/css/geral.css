@@ -466,10 +466,10 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 10px;
-      font-size: 14px;
+      padding: 5px;
+      font-size: 18px;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 5px;
     }
     
     /* Efeito de flip no clique */
@@ -938,10 +938,10 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 10px;
-      font-size: 14px;
+      padding: 5px;
+      font-size: 18px;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 5px;
     }
     
     /* Efeito de flip no clique */
