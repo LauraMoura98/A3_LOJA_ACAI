@@ -12,9 +12,6 @@ jobs:
       HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
       USER: 'ubuntu'      
       REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI' 
-      BACKEND_DIR: '/home/ubuntu/A3_LOJA_ACAI/backend'
-      BACKEND_CONTAINER: 'django'
-      NGINX_CONTAINER: 'nginx'
 
     steps:
       - name: Configurar SSH para Acesso ao Servidor
@@ -25,7 +22,8 @@ jobs:
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-            set -e  # Para garantir que o script pare em caso de erro
+            set -e
+            ls
             cd $REPO_DIR
             ls
             echo "Fazendo pull do código mais recente..."
