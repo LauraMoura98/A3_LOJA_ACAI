@@ -1,13 +1,27 @@
 # Use a imagem oficial do Nginx como base
 FROM nginx:alpine
 
+# Instale o OpenSSL para gerar certificados autoassinados (se necessário)
+RUN apk update && apk add openssl
+
+# Crie o diretório para armazenar os certificados
+RUN mkdir -p /etc/ssl/certs /etc/ssl/private
+
+# Gere o certificado autoassinado (pode ser substituído se você já tiver seus certificados)
+RUN openssl genpkey -algorithm RSA -out /etc/ssl/private/privkey.pem -aes256 \
+    && openssl req -new -x509 -key /etc/ssl/private/privkey.pem -out /etc/ssl/certs/cert.pem -days 365 \
+    -subj "/C=BR/ST=Estado/L=Cidade/O=Empresa/CN=localhost"
+
 # Copie o arquivo de configuração do Nginx para o container
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Copie os arquivos estáticos do Django para o diretório do Nginx
 COPY backend/static /usr/share/nginx/html/static
 
-# Exponha a porta 80
+# Exponha a porta 443 (HTTPS)
+EXPOSE 443
+
+# Exponha a porta 80 (HTTP)
 EXPOSE 80
 
 # Inicie o Nginx
