@@ -21,9 +21,10 @@ services:
     depends_on:
       - django
     volumes:
-      - static_volume:/backend/loja_acai/static  # Arquivos estáticos
+      - static_volume:/backend/loja_acai/static
     ports:
-      - "80:80"  # Expondo a porta 80 para o acesso público
+      - "80:80"
+      - "443:443"
     networks:
       - app_network
 
