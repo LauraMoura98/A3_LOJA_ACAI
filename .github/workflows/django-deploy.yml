@@ -4,15 +4,14 @@ on:
   push:
     branches:
       - master
-env:
-  HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
-  USER: 'ubuntu'      
-  MAIN_DIR: '/home/ubuntu/A3_LOJA_ACAI/'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}
+      REPO_DIR: ${{ secrets.REPO_DIR }}    
+      USER: 'ubuntu'      
     steps:
       - name: Configurar SSH para Acesso ao Servidor
         uses: webfactory/ssh-agent@v0.5.3
@@ -22,7 +21,7 @@ jobs:
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd $MAIN_DIR
+          cd $REPO_DIR
           ls
           echo "Fazendo pull do código mais recente..."
           git pull origin master
@@ -41,7 +40,7 @@ jobs:
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-          cd $MAIN_DIR
+          cd $REPO_DIR
           echo "Construindo Containers..."
           docker-compose build
 
