@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - master
+env:
+  HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
+  USER: 'ubuntu'      
+  REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI/'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
-      USER: 'ubuntu'      
-      REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI/'
 
     steps:
       - name: Configurar SSH para Acesso ao Servidor
