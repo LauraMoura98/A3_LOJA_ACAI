@@ -7,7 +7,7 @@ on:
 env:
   HOST: ${{ secrets.VIRTUAL_MACHINE_IP }}  
   USER: 'ubuntu'      
-  REPO_DIR: '/home/ubuntu/A3_LOJA_ACAI/'
+  MAIN_DIR: '/home/ubuntu/A3_LOJA_ACAI/'
 
 jobs:
   deploy:
@@ -22,7 +22,7 @@ jobs:
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd $REPO_DIR
+          cd $MAIN_DIR
           ls
           echo "Fazendo pull do código mais recente..."
           git pull origin master
@@ -41,7 +41,7 @@ jobs:
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-          cd $REPO_DIR
+          cd $MAIN_DIR
           echo "Construindo Containers..."
           docker-compose build
 
