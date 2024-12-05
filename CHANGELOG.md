@@ -1,6 +1,14 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-05]
+
+### Corrigido
+- Caminhos dos statics do django e do swagger foram corrigidos no nginx.conf
+
+### Alterado
+- Endpoints de `GET`foram configuradas para serem públicas
+
 ## [2024-12-04]
 
 ### Adicionado
@@ -18,7 +26,7 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ## [2024-12-03]
 
-### Modificado
+### Alterado
 - Nomes, apenas nome e sobrenome no site
 - Criado começo da integração da parte de administração
 
