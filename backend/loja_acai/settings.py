@@ -149,7 +149,7 @@ SWAGGER_SETTINGS = {
             "description": "Insira o token JWT no seguinte formato 'Bearer {access token}'"
         }
     },
-    "USE_SESSION_AUTH": False,  # Desabilita autenticação por sessão (se não for usar)
+    "USE_SESSION_AUTH": False,
 }
 
 
