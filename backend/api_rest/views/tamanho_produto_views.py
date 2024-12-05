@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import TamanhoProduto
 from api_rest.serializers import TamanhoProdutoSerializer
@@ -24,6 +25,7 @@ from api_rest.serializers import TamanhoProdutoSerializer
     responses={200: TamanhoProdutoSerializer, 400: 'Erro de validação.', 404: 'Tamanho_Produto não encontrado.'}
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_por_id(request, id):
     try:
         tamanho_produto = TamanhoProduto.objects.get(pk=id)
@@ -43,6 +45,7 @@ def TamanhoProdutos_por_id(request, id):
         if serializer.is_valid():
             serializer.save()
 
+
 @swagger_auto_schema(
     method='post',
     request_body=TamanhoProdutoSerializer,
@@ -54,6 +57,7 @@ def TamanhoProdutos_por_id(request, id):
     operation_description='GET api/v1/TamanhoProdutos/',
 )
 @api_view(["POST", "GET"])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_geral(request):
     if request.method == "GET":
         tamanho_produto = TamanhoProduto.objects.all()

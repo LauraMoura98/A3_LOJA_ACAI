@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import Pedido
 from api_rest.serializers import PedidoSerializer
@@ -18,6 +19,7 @@ from api_rest.serializers import PedidoSerializer
     operation_description='GET api/v1/pedidos/',
 )
 @api_view(["POST", "GET"])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def pedidos_geral(request):
     if request.method == "GET":
         pedidos = Pedido.objects.all()
@@ -49,6 +51,7 @@ def pedidos_geral(request):
     responses={200: PedidoSerializer, 400: 'Erro de validação.', 404: 'Pedido não encontrado.'}
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def pedidos_por_id(request, id):
     try:
         pedido = Pedido.objects.get(pk=id)

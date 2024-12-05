@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import Tamanho
 from api_rest.serializers import TamanhoSerializer
@@ -24,6 +25,7 @@ from api_rest.serializers import TamanhoSerializer
     responses={200: TamanhoSerializer, 400: 'Erro de validação.', 404: 'Tamanho não encontrado.'}
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def tamanhos_por_id(request, id):
     try:
         tamanho = Tamanho.objects.get(pk=id)
@@ -43,6 +45,7 @@ def tamanhos_por_id(request, id):
         if serializer.is_valid():
             serializer.save()
 
+
 @swagger_auto_schema(
     method='post',
     request_body=TamanhoSerializer,
@@ -54,6 +57,7 @@ def tamanhos_por_id(request, id):
     operation_description='GET api/v1/Tamanhos/',
 )
 @api_view(["POST", "GET"])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def tamanhos_geral(request):
     if request.method == "GET":
         Tamanhos = Tamanho.objects.all()

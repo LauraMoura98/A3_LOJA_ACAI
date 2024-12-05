@@ -1,7 +1,8 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api_rest.models import Acrescimos
 from api_rest.serializers import AcrescimoSerializer
@@ -34,6 +35,7 @@ from api_rest.serializers import AcrescimoSerializer
     }
 )
 @api_view(['GET', 'DELETE', 'PUT'])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def acrescimos_por_id(request, id):
     try:
         acrescimo = Acrescimos.objects.get(pk=id)
@@ -80,13 +82,14 @@ def acrescimos_por_id(request, id):
     operation_description='GET api/v1/produtos/',
 )
 @api_view(["POST", "GET"])
+@permission_classes([AllowAny if "GET" else IsAuthenticated])
 def acrescimos_geral(request):
 
     if request.method == "GET":
         acrescimos = Acrescimos.objects.all()
         serializer = AcrescimoSerializer(acrescimos, many=True)
         return Response(serializer.data)
-    
+
     elif request.method == "POST":
         serializer = AcrescimoSerializer(data=request.data)
         if serializer.is_valid():
