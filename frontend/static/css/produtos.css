@@ -1,3 +1,5 @@
+@media (min-width: 769px) {
+
 /* Atualizando o estilo do produto */
 .produtos-item {
     display: flex;
@@ -57,4 +59,81 @@
 
 .produtos-preco p {
     margin: 0;
+}
+
+}
+
+/* ------- */
+
+@media (max-width: 768px) {
+
+
+/* Estilos para a versão mobile */
+@media (max-width: 768px) {
+    /* Atualizando o estilo do produto */
+    .produtos-item {
+        display: flex;
+        flex-direction: column; /* Empilha os elementos na vertical */
+        align-items: flex-start; /* Alinha os itens à esquerda */
+        background-color: #fff;
+        padding: 10px; /* Menos espaçamento */
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        max-width: 100%; /* Largura total do container */
+        margin: 10px auto; /* Centraliza e espaça o produto */
+    }
+
+    /* Estilo da imagem do produto */
+    .produtos-imagem {
+        margin-right: 0; /* Remove o espaço à direita */
+        margin-bottom: 10px; /* Adiciona um espaço inferior */
+        max-width: 100px; /* Limita a largura da imagem */
+        text-align: center; /* Centraliza a imagem */
+    }
+
+    .produtos-imagem img {
+        max-width: 100%; /* Ajusta para a largura do container */
+        height: auto; /* Mantém a proporção */
+    }
+
+    /* Adicionando a linha vertical */
+    .divisor {
+        width: 100%; /* Linha ocupa toda a largura */
+        height: 1px; /* Altura reduzida */
+        background-color: #ccc; /* Cor da linha */
+        margin: 10px 0; /* Espaço entre a linha e os outros elementos */
+    }
+
+    /* Estilo da área de texto do produto */
+    .produtos-detalhes {
+        flex-grow: 1; /* Permite que ocupe o restante do espaço */
+    }
+
+    /* Alinhamento e estilos dos textos */
+    .produtos-detalhes h3 {
+        font-size: 1.1em; /* Fonte ajustada para mobile */
+        margin: 0;
+        color: #333;
+    }
+
+    .produtos-detalhes p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 0.9em; /* Fonte reduzida para melhor legibilidade */
+    }
+
+    /* Estilo do preço */
+    .produtos-preco {
+        text-align: left; /* Alinha o preço à esquerda */
+        font-size: 1em; /* Ajusta o tamanho da fonte */
+        color: #4B0082;
+        font-weight: bold;
+    }
+
+    .produtos-preco p {
+        margin: 0;
+    }
+}
+
 }
