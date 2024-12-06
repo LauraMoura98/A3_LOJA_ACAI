@@ -22,9 +22,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
           cd /home/ubuntu/A3_LOJA_ACAI
-          echo "Fazendo pull do código mais recente..."
-          git pull origin master
-      
+
           if ! git diff-index --quiet HEAD --; then
             echo "Mudanças encontradas. Realizando commit e push..."
             git add .
@@ -33,6 +31,9 @@ jobs:
           else
             echo "Nenhuma mudança encontrada. Pulando o commit e o push."
           fi
+
+          echo "Fazendo pull do código mais recente..."
+          git pull origin master
           EOF
       
 
