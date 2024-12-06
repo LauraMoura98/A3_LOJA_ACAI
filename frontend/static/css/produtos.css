@@ -61,12 +61,41 @@
     margin: 0;
 }
 
+.navbar-categorias {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    margin: 20px auto;
+}
+
+.navbar-categorias button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff; /* Cor de fundo dos botões */
+    color: #333;
+    font-size: 1.1em; /* Aumenta o tamanho da fonte */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.navbar-categorias button:hover {
+    background-color: #ddd;
+}
+
+.navbar-categorias button.active {
+    background-color: #4B0082;
+    color: #fff;
+}
+
 }
 
 /* ------- */
-
-@media (max-width: 768px) {
-
 
 /* Estilos para a versão mobile */
 @media (max-width: 768px) {
@@ -134,6 +163,37 @@
     .produtos-preco p {
         margin: 0;
     }
+
+    .navbar-categorias {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+        margin: 20px auto;
+    }
+    
+    .navbar-categorias button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff; /* Cor de fundo dos botões */
+        color: #333;
+        font-size: 1.1em; /* Aumenta o tamanho da fonte */
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    
+    .navbar-categorias button:hover {
+        background-color: #ddd;
+    }
+    
+    .navbar-categorias button.active {
+        background-color: #4B0082;
+        color: #fff;
+    }
 }
 
-}

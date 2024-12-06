@@ -3,71 +3,91 @@ $(document).ready(function () {
     const apiURLProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/produtos/";
     const apiURLCategoria = "https://kong-6266dc6838uss9iu0.kongcloud.dev/categorias/";
 
-    // Função para buscar categorias e comparar com produtos
-    function buscarProdutosPorCategoria() {
-        let produtosCache;
-        let categoriaSelecionada;
+    let produtosCache = [];
+    let categoriasCache = [];
 
-        // Primeiro, busca os produtos
+    // Função para buscar e renderizar categorias e produtos
+    function buscarProdutosECategorias() {
+        // Busca categorias
         $.ajax({
-            url: apiURLProdutos,
+            url: apiURLCategoria,
             type: "GET",
             dataType: "json",
-            success: function (produtos) {
-                produtosCache = produtos;
+            success: function (categorias) {
+                categoriasCache = categorias;
 
-                // Busca todas as categorias
+                // Após buscar categorias, busca produtos
                 $.ajax({
-                    url: apiURLCategoria,
+                    url: apiURLProdutos,
                     type: "GET",
                     dataType: "json",
-                    success: function (categorias) {
-                        // Filtra categorias correspondentes aos produtos
-                        produtosCache.forEach(produto => {
-                            const categoria = categorias.find(c => c.nome === produto.categoria);
-                            if (categoria) {
-                                produto.categoria_id = categoria.id;
-                                categoriaSelecionada = categoria.id;
-                            }
-                        });
-
-                        // Após encontrar a categoria, busca os produtos dessa categoria
-                        if (categoriaSelecionada) {
-                            buscarProdutosComCategoria(categoriaSelecionada);
-                        }
+                    success: function (produtos) {
+                        produtosCache = produtos;
+                        renderizarNavbar();
+                        renderizarProdutos();
                     },
                     error: function () {
-                        console.error("Erro ao buscar categorias.");
+                        console.error("Erro ao buscar produtos.");
+                        $("#lista-produtos").html("<p>Erro ao carregar produtos.</p>");
                     }
                 });
             },
             error: function () {
-                console.error("Erro ao buscar produtos.");
+                console.error("Erro ao buscar categorias.");
+                $("#navbar").html("<p>Erro ao carregar, servidor offline.</p>");
             }
         });
     }
 
-    // Função para buscar produtos específicos por categoria
-    function buscarProdutosComCategoria(categoriaId) {
-        $.ajax({
-            url: `${apiURLProdutos}?categoria=${categoriaId}`,
-            type: "GET",
-            dataType: "json",
-            success: function (produtos) {
-                renderizarProdutos(produtos);
-            },
-            error: function () {
-                console.error("Erro ao buscar produtos por categoria.");
-            }
+    // Função para renderizar a navbar de categorias
+    function renderizarNavbar() {
+        // Filtrar categorias que possuem pelo menos um produto
+        const categoriasComProdutos = categoriasCache.filter(categoria =>
+            produtosCache.some(produto => produto.categoria === categoria.nome)
+        );
+
+        if (categoriasComProdutos.length === 0) {
+            $("#navbar").html("<p>Nenhuma categoria disponível.</p>");
+            return;
+        }
+
+        const navbarHTML = `
+            <div class="navbar-categorias">
+                <button class="categoria-filtro" data-categoria="todos">Todos</button>
+                ${categoriasComProdutos
+                    .map(
+                        categoria => `
+                    <button class="categoria-filtro" data-categoria="${categoria.nome}">${categoria.nome}</button>
+                `
+                    )
+                    .join("")}
+            </div>
+        `;
+        $("#navbar").html(navbarHTML);
+
+        // Configura os eventos de clique para os botões da navbar
+        $(".categoria-filtro").on("click", function () {
+            const categoriaSelecionada = $(this).data("categoria");
+            renderizarProdutos(categoriaSelecionada);
         });
     }
 
-    // Função para renderizar os produtos na página
-    function renderizarProdutos(produtos) {
+    // Função para renderizar os produtos com base na categoria selecionada
+    function renderizarProdutos(categoriaSelecionada = "todos") {
         const $container = $("#lista-produtos");
         $container.empty();
 
-        produtos.forEach(produto => {
+        const produtosFiltrados =
+            categoriaSelecionada === "todos"
+                ? produtosCache
+                : produtosCache.filter(produto => produto.categoria === categoriaSelecionada);
+
+        if (produtosFiltrados.length === 0) {
+            $container.html("<p>Nenhum produto encontrado nesta categoria.</p>");
+            return;
+        }
+
+        produtosFiltrados.forEach(produto => {
             const produtoHTML = `
                 <div class="produtos-item">
                     <div class="produtos-imagem">
@@ -90,5 +110,5 @@ $(document).ready(function () {
     }
 
     // Chama a função inicial ao carregar a página
-    buscarProdutosPorCategoria();
+    buscarProdutosECategorias();
 });
