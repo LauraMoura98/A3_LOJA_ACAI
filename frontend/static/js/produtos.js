@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // URLs da API
-    const apiURLProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/produtos/";
-    const apiURLCategoria = "https://kong-6266dc6838uss9iu0.kongcloud.dev/categorias/";
+    const apiURLProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/produtos/";
+    const apiURLCategoria = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/categorias/";
 
     let produtosCache = [];
     let categoriasCache = [];
