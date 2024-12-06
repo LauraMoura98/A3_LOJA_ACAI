@@ -22,9 +22,7 @@ jobs:
       - name: Realizar Pull de Repositório do Github
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd $REPO_DIR
-          cat $REPO_DIR
-          ls
+          cd \$REPO_DIR
           echo "Fazendo pull do código mais recente..."
           git pull origin master
       
@@ -42,7 +40,7 @@ jobs:
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
-          cd $REPO_DIR
+          cd \$REPO_DIR
           echo "Construindo Containers..."
           docker-compose build
 
