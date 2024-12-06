@@ -5,9 +5,11 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Adicionado
 - Form de login, para obter token
+- Form de criação de produtos e categorias
 
 ### Corrigido
 - Barra de navegação das categorias
+- Foto Poyatos
 
 ### Alterado
 - Caminhos da api
