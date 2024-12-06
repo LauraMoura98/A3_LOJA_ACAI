@@ -1,13 +1,28 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-06]
+
+### Adicionado
+- Form de login, para obter token
+
+### Corrigido
+- Barra de navegação das categorias
+
+### Alterado
+- Caminhos da api
+
 ## [2024-12-05]
 
 ### Corrigido
 - Caminhos dos statics do django e do swagger foram corrigidos no nginx.conf
+- CSS dos produtos
 
 ### Alterado
 - Endpoints de `GET`foram configuradas para serem públicas
+
+### Adicionado
+- Fotos restantes na galeria
 
 ## [2024-12-04]
 
