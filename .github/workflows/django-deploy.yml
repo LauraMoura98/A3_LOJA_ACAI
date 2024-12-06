@@ -23,6 +23,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
           cd $REPO_DIR
+          cat $REPO_DIR
           ls
           echo "Fazendo pull do código mais recente..."
           git pull origin master
