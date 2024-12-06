@@ -38,7 +38,8 @@ jobs:
 
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
-          ls
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+          cd /home/ubuntu/A3_LOJA_ACAI
           echo "Construindo Containers..."
           docker-compose build
 
