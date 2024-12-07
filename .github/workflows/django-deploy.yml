@@ -17,30 +17,15 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Realizar Pull de Repositório do Github
-        run: |
-          ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd /home/ubuntu/A3_LOJA_ACAI
-
-          if ! git diff-index --quiet HEAD --; then
-            echo "Mudanças encontradas. Realizando commit e push..."
-            git add .
-            git commit -m "DB_CHANGES"
-            git push origin master
-          else
-            echo "Nenhuma mudança encontrada. Pulando o commit e o push."
-          fi
-
-          echo "Fazendo pull do código mais recente..."
-          git pull origin master
-          EOF
       
-
       - name: Conectar, Fazer Pull e Construir Imagem no Servidor
         run: |
           ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
           cd /home/ubuntu/A3_LOJA_ACAI
+
+          echo "Fazendo pull do código mais recente..."
+          git pull origin master
+
           echo "Construindo Containers..."
           docker-compose build
 
