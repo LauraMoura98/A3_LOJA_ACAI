@@ -18,6 +18,7 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 - Pedidos e carrinho de pedidos
 - Forma de apagar pedidos
 - Corrigir erro ao adicionar acréscimo
+- Forma de apagar tamanho-pedidos
 
 ## [2024-12-06]
 
