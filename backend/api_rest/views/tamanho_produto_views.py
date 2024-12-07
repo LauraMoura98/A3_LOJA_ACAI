@@ -33,19 +33,16 @@ from collections import defaultdict
 @api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
-    # GET: Agrupar tamanhos e preços no formato desejado
     if request.method == "GET":
         produtos = TamanhoProduto.objects.values("produto_id", "tamanho__nome", "preco").all()
-        
-        # Agrupando dados no formato desejado
+
         dados_produtos = defaultdict(dict)
         for item in produtos:
             produto_id = item["produto_id"]
             tamanho_nome = item["tamanho__nome"]
             preco = item["preco"]
             dados_produtos[produto_id][tamanho_nome] = preco
-        
-        # Construindo a resposta no formato desejado
+
         resposta = []
         for produto, tamanhos in dados_produtos.items():
             resposta.append({
@@ -55,7 +52,6 @@ def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
 
         return Response(resposta)
 
-    # POST: Cria novos tamanhos e preços para produtos
     elif request.method == "POST":
         if isinstance(request.data, list):
             serializer = TamanhoProdutoSerializer(data=request.data, many=True)
@@ -67,7 +63,6 @@ def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # DELETE: Exclui tamanho e preço específicos
     elif request.method == "DELETE" and produto_id and tamanho_id:
         try:
             produto_tamanho = TamanhoProduto.objects.get(produto_id=produto_id, tamanho_id=tamanho_id)
