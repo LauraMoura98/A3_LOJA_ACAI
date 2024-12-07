@@ -59,3 +59,4 @@ class TamanhoProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TamanhoProduto
         fields = '__all__'
+
