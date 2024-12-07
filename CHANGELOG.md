@@ -1,6 +1,24 @@
 # Changelog
 
 Todas as mudanças importantes para este projeto serão documentadas neste arquivo *a partir do dia 15-11-2024
+## [2024-12-07]
+
+### Adicionado
+- Páginas de administração
+
+### Corrigido
+- Carregamento dos atributos dos produtos
+
+### Alterado
+- Salvamento do banco de dados
+- Backend
+- API de tamanhos
+
+### TODO
+- Pedidos e carrinho de pedidos
+- Forma de apagar pedidos
+- Corrigir erro ao adicionar acréscimo
+
 ## [2024-12-06]
 
 ### Adicionado
