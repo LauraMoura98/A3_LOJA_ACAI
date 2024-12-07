@@ -10,7 +10,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /code
 
-RUN mkdir -p /data
+RUN mkdir -p /code/backend/data
 RUN chmod -R 755 /data
 
 ENV DJANGO_DB_PATH=/data/db.sqlite3
