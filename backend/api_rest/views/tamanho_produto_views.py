@@ -13,24 +13,24 @@ from collections import defaultdict
 
 @swagger_auto_schema(
     method='get',
-    operation_description='GET api/v1/TamanhoProduto/',
+    operation_description='GET api/v1/tamanho-produtos/',
     responses={200: TamanhoProdutoSerializer(many=True)}
 )
 @swagger_auto_schema(
     method='post',
     request_body=TamanhoProdutoSerializer,
-    operation_description='POST api/v1/TamanhoProduto/',
+    operation_description='POST api/v1/tamanho-produtos/',
     responses={201: TamanhoProdutoSerializer, 400: 'Erro de validação.'}
 )
 @swagger_auto_schema(
     method='put',
     request_body=TamanhoProdutoSerializer,
-    operation_description='PUT api/v1/TamanhoProduto/',
+    operation_description='PUT api/v1/tamanho-produtos/',
     responses={200: TamanhoProdutoSerializer, 400: 'Erro de validação.', 404: 'Associação produto-tamanho não encontrada.'}
 )
 @swagger_auto_schema(
     method='delete',
-    operation_description='DELETE api/v1/TamanhoProduto/{produto_id}/{tamanho_id}',
+    operation_description='DELETE api/v1/tamanho-produtos/{produto_id}/{tamanho_id}',
     responses={
         204: "Associação produto-tamanho deletada com sucesso.",
         404: "Associação produto-tamanho não encontrada."

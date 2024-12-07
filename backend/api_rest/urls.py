@@ -35,7 +35,7 @@ urlpatterns = [
     path('pedidos/', pedidos_geral, name='pedidos_geral'),
     path('pedidos/<int:id>/', pedidos_por_id, name='pedidos_por_id'),
     path('tamanho-produtos/', TamanhoProdutos_geral, name='tamanho_produtos_geral'),
-    path('ProdutoTamanho/<int:produto_id>/<str:tamanho_id>/', TamanhoProdutos_geral, name='deletar_produto_tamanho'),
+    path('tamanho-produtos/<int:produto_id>/<str:tamanho_id>/', TamanhoProdutos_geral, name='deletar_produto_tamanho'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
