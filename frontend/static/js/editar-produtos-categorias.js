@@ -53,9 +53,13 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }
 
+        const token = getCookie("authToken");
+        if (!token) return;
+
         fetch(apiUrl, {
             method: 'PUT',
             headers: {
+                "Authorization": `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(updatedItem),
