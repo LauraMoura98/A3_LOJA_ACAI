@@ -4,8 +4,9 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from api_rest.models import ProdutoTamanho, Produto, Tamanho
-from api_rest.serializers import ProdutoTamanhoSerializer
+from api_rest.models import TamanhoProduto, Produto, Tamanho
+from api_rest.serializers import TamanhoProdutoSerializer
+
 
 @swagger_auto_schema(
     method='post',
@@ -15,7 +16,7 @@ from api_rest.serializers import ProdutoTamanhoSerializer
             {'tamanho_id': 'int', 'preco': 'decimal'}
         ]
     },
-    operation_description='POST api/v1/ProdutoTamanho/',
+    operation_description='POST api/v1/TamanhoProduto/',
     responses={
         201: "Tamanhos adicionados com sucesso.",
         400: "Erro de validação.",
@@ -24,15 +25,15 @@ from api_rest.serializers import ProdutoTamanhoSerializer
 )
 @swagger_auto_schema(
     method='get',
-    operation_description='GET api/v1/ProdutoTamanho/',
-    responses={200: ProdutoTamanhoSerializer(many=True)}
+    operation_description='GET api/v1/TamanhoProduto/',
+    responses={200: TamanhoProdutoSerializer(many=True)}
 )
 @api_view(["POST", "GET"])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
-def ProdutoTamanho_geral(request):
+def TamanhoProduto_geral(request):
     if request.method == "GET":
-        produto_tamanhos = ProdutoTamanho.objects.all()
-        serializer = ProdutoTamanhoSerializer(produto_tamanhos, many=True)
+        produto_tamanhos = TamanhoProduto.objects.all()
+        serializer = TamanhoProdutoSerializer(produto_tamanhos, many=True)
         return Response(serializer.data)
 
     elif request.method == "POST":
@@ -66,11 +67,11 @@ def ProdutoTamanho_geral(request):
                 errors.append({"tamanho_id": tamanho_id, "error": "Tamanho não encontrado."})
                 continue
 
-            if ProdutoTamanho.objects.filter(produto=produto, tamanho=tamanho).exists():
+            if TamanhoProduto.objects.filter(produto=produto, tamanho=tamanho).exists():
                 errors.append({"tamanho_id": tamanho_id, "error": "Tamanho já associado ao produto."})
                 continue
 
-            produto_tamanho = ProdutoTamanho(produto=produto, tamanho=tamanho, preco=preco)
+            produto_tamanho = TamanhoProduto(produto=produto, tamanho=tamanho, preco=preco)
             produto_tamanho.save()
             created.append({"tamanho_id": tamanho_id, "preco": preco})
 
