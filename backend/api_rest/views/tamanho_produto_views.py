@@ -28,14 +28,6 @@ from collections import defaultdict
     operation_description='PUT api/v1/tamanho-produtos/',
     responses={200: TamanhoProdutoSerializer, 400: 'Erro de validação.', 404: 'Associação produto-tamanho não encontrada.'}
 )
-@swagger_auto_schema(
-    method='delete',
-    operation_description='DELETE api/v1/tamanho-produtos/{produto_id}/{tamanho_id}',
-    responses={
-        204: "Associação produto-tamanho deletada com sucesso.",
-        404: "Associação produto-tamanho não encontrada."
-    }
-)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
@@ -87,8 +79,19 @@ def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-    # DELETE: Excluir uma associação entre produto e tamanho
-    elif request.method == "DELETE" and produto_id and tamanho_id:
+
+@swagger_auto_schema(
+    method='delete',
+    operation_description='DELETE api/v1/tamanho-produtos/{produto_id}/{tamanho_id}',
+    responses={
+        204: "Associação produto-tamanho deletada com sucesso.",
+        404: "Associação produto-tamanho não encontrada."
+    }
+)
+@api_view(['DELETE'])
+def TamanhoProdutos__delete(request, produto_id=None, tamanho_id=None):
+
+    if request.method == "DELETE" and produto_id and tamanho_id:
         try:
             produto_tamanho = TamanhoProduto.objects.get(produto_id=produto_id, tamanho_id=tamanho_id)
             produto_tamanho.delete()
