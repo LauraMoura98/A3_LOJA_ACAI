@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN Criar - Açaí FASEH</title>
+    <title>ADMIN Login - Açaí FASEH</title>
 	
 	<script src="../static/js/navbar-admin.js" defer></script>
 	<script src="../static/js/tela.js" defer></script>
-    <script src="../static/js/login-admin.js"></script>
 	<link rel="stylesheet" type="text/css" href="../static/css/geral.css">
     
     <link rel="icon" type="image/svg" href="../static/img/favicon.svg">
@@ -24,7 +23,8 @@
             margin-bottom: 20px;
         }
 
-        button, textarea {
+        input, button, textarea {
+            display: block;
             margin: 10px 0;
             padding: 10px;
             width: 100%;
@@ -82,24 +82,6 @@
         #logout-button:hover {
             background-color: #c82333;
         }
-
-        /* Container do item */
-        .acrescimo-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px; /* Espaçamento entre os itens */
-        }
-
-        /* Espaçamento entre checkbox e texto */
-        .acrescimo-item input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        input{
-            margin: 10px 0;
-            padding: 10px;
-        }
-
     </style>
 </head>
 <body>
@@ -107,54 +89,24 @@
         <div id="navbar-container"></div>
     </div>
 
-    <h1>Criação de Produtos e Categorias</h1>
+    <h1>Login</h1>
+
 
     <div class="form-container" id="auth-container">
+        <h2>Autenticação</h2>
+        <form id="auth-form">
+            <label for="username">Usuário:</label><br>
+            <input type="text" id="username" required><br>
+            <label for="password">Senha:</label><br>
+            <input type="password" id="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
         <p id="auth-message" class="response-message"></p>
         <strong><p id="token-status"></p></strong>
         <button id="logout-button">Logout</button>
+
     </div>
 
-
-
-    <div class="form-container" id="product-container">
-
-        
-            <h2>Criar Produto</h2>
-    <form id="product-form">
-        <label for="nome">Nome do Produto:</label><br>
-        <input type="text" id="nome" required><br>
-        <label for="descricao">Descrição:</label><br>
-        <textarea id="descricao" required></textarea><br>
-        <label for="imagem_url">URL da Imagem:</label><br>
-        <input type="text" id="imagem_url" required><br>
-        <label for="disponibilidade">Disponível:</label>
-        <input type="checkbox" id="disponibilidade" checked><br>
-        <div>
-            <label for="product-acrescimos">Acréscimos:</label><br>
-            <ul id="product-acrescimos"></ul>
-        </div>
-        <label for="categoria">Categoria:</label><br>
-        <select id="categoria" required>
-            <option value="">Selecione uma categoria</option>
-        </select><br><br>
-        <button type="submit">Criar Produto</button>
-    </form>
-    <p id="product-message" class="response-message"></p>
-
-
-    <div class="form-container" id="category-container">
-        <h2>Criar Categoria</h2>
-        <form id="category-form">
-            <label for="nome-categoria">Nome da Categoria:</label><br>
-            <input type="text" id="nome-categoria" required><br>
-            <label for="descricao-categoria">Descrição:</label><br>
-            <textarea id="descricao-categoria" required></textarea><br><br>
-            <button type="submit">Criar Categoria</button>
-        </form>
-        <p id="category-message" class="response-message"></p>
-    </div>
-
-    <script src="../static/js/criar-produtos-categorias.js"></script>
+    <script src="../static/js/login-admin.js"></script>
 </body>
 </html>

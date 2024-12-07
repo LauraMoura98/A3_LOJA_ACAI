@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMIN Criar - Açaí FASEH</title>
-	
-	<script src="../static/js/navbar-admin.js" defer></script>
-	<script src="../static/js/tela.js" defer></script>
-    <script src="../static/js/login-admin.js"></script>
-	<link rel="stylesheet" type="text/css" href="../static/css/geral.css">
-    
+
+    <script src="../static/js/navbar-admin.js" defer></script>
+    <script src="../static/js/tamanhos-admin.js" defer></script> 
+    <link rel="stylesheet" type="text/css" href="../static/css/geral.css">
     <link rel="icon" type="image/svg" href="../static/img/favicon.svg">
-	
+
     <style>
         body {
             margin: 20px;
@@ -100,61 +98,63 @@
             padding: 10px;
         }
 
+         /* Responsividade */
+        @media (max-width: 600px) {
+            form {
+                grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+            }
+            label {
+                text-align: left; /* Alinha os rótulos à esquerda */
+                margin-right: 0;
+            }
+           button {
+                grid-column: 1;
+            }
+        }
+
+
     </style>
 </head>
 <body>
-    <div style="height:10vh">
-        <div id="navbar-container"></div>
-    </div>
+    <header id="navbar-container" style="height: 10vh;"></header>
 
-    <h1>Criação de Produtos e Categorias</h1>
-
-    <div class="form-container" id="auth-container">
-        <p id="auth-message" class="response-message"></p>
-        <strong><p id="token-status"></p></strong>
-        <button id="logout-button">Logout</button>
-    </div>
-
-
-
-    <div class="form-container" id="product-container">
-
-        
-            <h2>Criar Produto</h2>
-    <form id="product-form">
-        <label for="nome">Nome do Produto:</label><br>
-        <input type="text" id="nome" required><br>
-        <label for="descricao">Descrição:</label><br>
-        <textarea id="descricao" required></textarea><br>
-        <label for="imagem_url">URL da Imagem:</label><br>
-        <input type="text" id="imagem_url" required><br>
-        <label for="disponibilidade">Disponível:</label>
-        <input type="checkbox" id="disponibilidade" checked><br>
-        <div>
-            <label for="product-acrescimos">Acréscimos:</label><br>
-            <ul id="product-acrescimos"></ul>
-        </div>
-        <label for="categoria">Categoria:</label><br>
-        <select id="categoria" required>
-            <option value="">Selecione uma categoria</option>
-        </select><br><br>
-        <button type="submit">Criar Produto</button>
-    </form>
-    <p id="product-message" class="response-message"></p>
-
-
-    <div class="form-container" id="category-container">
-        <h2>Criar Categoria</h2>
-        <form id="category-form">
-            <label for="nome-categoria">Nome da Categoria:</label><br>
-            <input type="text" id="nome-categoria" required><br>
-            <label for="descricao-categoria">Descrição:</label><br>
-            <textarea id="descricao-categoria" required></textarea><br><br>
-            <button type="submit">Criar Categoria</button>
+    <div class="form-container" id="tamanho-container">
+        <h2>Gerenciar Tamanhos</h2>
+        <form id="tamanho-form">
+            <label for="tamanho-nome">Nome:</label>
+            <input type="text" id="tamanho-nome" required>
+            
+            <label for="tamanho-descricao">Descrição:</label>
+            <input type="text" id="tamanho-descricao" required>
+            
+            <button type="submit">Salvar Tamanho</button>
         </form>
-        <p id="category-message" class="response-message"></p>
+    
+        <h3>Tamanhos Existentes</h3>
+        <ul id="tamanho-list"></ul>
     </div>
-
-    <script src="../static/js/criar-produtos-categorias.js"></script>
+    
+    <div class="form-container" id="tamanho-produto-container">
+        <h2>Gerenciar Tamanho-Produtos</h2>
+        <form id="tamanho-produto-form">
+            <label for="produto-select">Produto:</label>
+            <select id="produto-select" required>
+                <option value="">Selecione um produto</option>
+            </select>
+            
+            <label for="tamanho-select">Tamanho:</label>
+            <select id="tamanho-select" required>
+                <option value="">Selecione um tamanho</option>
+            </select>
+            
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" required>
+            
+            <button type="submit">Salvar Tamanho-Produto</button>
+        </form>
+    
+        <h3>Tamanhos-Produtos Existentes</h3>
+        <ul id="tamanho-produto-list"></ul>
+    </div>
 </body>
 </html>
