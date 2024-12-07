@@ -56,8 +56,6 @@ class TamanhoSerializer(serializers.ModelSerializer):
 
 
 class TamanhoProdutoSerializer(serializers.ModelSerializer):
-    tamanho = TamanhoSerializer()
-
     class Meta:
         model = TamanhoProduto
         fields = '__all__'
