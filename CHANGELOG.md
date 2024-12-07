@@ -9,10 +9,11 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 
 ### Corrigido
 - Barra de navegação das categorias
-- Foto Poyatos
 
 ### Alterado
 - Caminhos da api
+- Foto Poyatos
+- Títulos na página sobre
 
 ## [2024-12-05]
 
