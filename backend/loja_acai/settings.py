@@ -96,10 +96,9 @@ WSGI_APPLICATION = 'loja_acai.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/ubuntu/data/db.sqlite3',
+        'NAME': os.path.join('/home/ubuntu/data', 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
