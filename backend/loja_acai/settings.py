@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'loja_acai.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('DJANGO_DB_PATH', '/code/data/db.sqlite3'),
+        'NAME': os.getenv('DJANGO_DB_PATH', '/code/db.sqlite3'),
     }
 }
 
