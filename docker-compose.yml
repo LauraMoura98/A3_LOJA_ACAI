@@ -9,7 +9,7 @@ services:
     volumes:
       - ./backend:/code
       - static_volume:/backend/loja_acai/static
-      - /home/ubuntu/data:/code/data
+      - django_data:/code/data
     expose:
       - 8000  
     networks:
@@ -36,3 +36,5 @@ networks:
 
 volumes:
   static_volume: 
+  django_data:
+  
