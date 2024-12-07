@@ -4,81 +4,86 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from api_rest.models import TamanhoProduto, Produto, Tamanho
+from api_rest.models import TamanhoProduto
 from api_rest.serializers import TamanhoProdutoSerializer
 
 
-@swagger_auto_schema(
-    method='post',
-    request_body={
-        'produto_id': 'int',
-        'tamanhos': [
-            {'tamanho_id': 'int', 'preco': 'decimal'}
-        ]
-    },
-    operation_description='POST api/v1/TamanhoProduto/',
-    responses={
-        201: "Tamanhos adicionados com sucesso.",
-        400: "Erro de validação.",
-        404: "Produto ou tamanho não encontrado."
-    }
-)
+from collections import defaultdict
+
+
 @swagger_auto_schema(
     method='get',
     operation_description='GET api/v1/TamanhoProduto/',
     responses={200: TamanhoProdutoSerializer(many=True)}
 )
-@api_view(["POST", "GET"])
+@swagger_auto_schema(
+    method='post',
+    request_body=TamanhoProdutoSerializer(many=True),
+    operation_description='POST api/v1/TamanhoProduto/',
+    responses={201: TamanhoProdutoSerializer(many=True), 400: 'Erro de Validação.'}
+)
+@swagger_auto_schema(
+    method='delete',
+    operation_description='DELETE api/v1/TamanhoProduto/{produto_id}/{tamanho_id}',
+    responses={
+        204: "Tamanho associado ao produto deletado com sucesso.",
+        404: "Associação produto-tamanho não encontrada."
+    }
+)
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
-def TamanhoProduto_geral(request):
+def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
+    # GET: Agrupar tamanhos e preços no formato desejado
     if request.method == "GET":
-        produto_tamanhos = TamanhoProduto.objects.all()
-        serializer = TamanhoProdutoSerializer(produto_tamanhos, many=True)
-        return Response(serializer.data)
+        produtos = TamanhoProduto.objects.values("produto_id", "tamanho__nome", "preco").all()
+        
+        # Agrupando dados no formato desejado
+        dados_produtos = defaultdict(dict)
+        for item in produtos:
+            produto_id = item["produto_id"]
+            tamanho_nome = item["tamanho__nome"]
+            preco = item["preco"]
+            dados_produtos[produto_id][tamanho_nome] = preco
+        
+        # Construindo a resposta no formato desejado
+        resposta = []
+        for produto, tamanhos in dados_produtos.items():
+            resposta.append({
+                "Produto": produto,
+                "Tamanhos": tamanhos
+            })
 
+        return Response(resposta)
+
+    # POST: Cria novos tamanhos e preços para produtos
     elif request.method == "POST":
-        produto_id = request.data.get("produto_id")
-        tamanhos = request.data.get("tamanhos")
+        if isinstance(request.data, list):
+            serializer = TamanhoProdutoSerializer(data=request.data, many=True)
+        else:
+            serializer = TamanhoProdutoSerializer(data=request.data)
 
-        if not produto_id or not tamanhos:
-            return Response(
-                {"error": "Produto e tamanhos são obrigatórios."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # DELETE: Exclui tamanho e preço específicos
+    elif request.method == "DELETE" and produto_id and tamanho_id:
         try:
-            produto = Produto.objects.get(pk=produto_id)
-        except Produto.DoesNotExist:
+            produto_tamanho = TamanhoProduto.objects.get(produto_id=produto_id, tamanho_id=tamanho_id)
+        except TamanhoProduto.DoesNotExist:
             return Response(
-                {"error": "Produto não encontrado."},
+                {"erro": "Associação produto-tamanho não encontrada."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        errors = []
-        created = []
+        produto_tamanho.delete()
+        return Response(
+            {"mensagem": "Tamanho associado ao produto deletado com sucesso."},
+            status=status.HTTP_204_NO_CONTENT
+        )
 
-        for tamanho_data in tamanhos:
-            tamanho_id = tamanho_data.get("tamanho_id")
-            preco = tamanho_data.get("preco")
-
-            try:
-                tamanho = Tamanho.objects.get(pk=tamanho_id)
-            except Tamanho.DoesNotExist:
-                errors.append({"tamanho_id": tamanho_id, "error": "Tamanho não encontrado."})
-                continue
-
-            if TamanhoProduto.objects.filter(produto=produto, tamanho=tamanho).exists():
-                errors.append({"tamanho_id": tamanho_id, "error": "Tamanho já associado ao produto."})
-                continue
-
-            produto_tamanho = TamanhoProduto(produto=produto, tamanho=tamanho, preco=preco)
-            produto_tamanho.save()
-            created.append({"tamanho_id": tamanho_id, "preco": preco})
-
-        response = {
-            "created": created,
-            "errors": errors
-        }
-
-        status_code = status.HTTP_201_CREATED if created else status.HTTP_400_BAD_REQUEST
-        return Response(response, status=status_code)
+    return Response(
+        {"erro": "Operação não suportada ou parâmetros inválidos."},
+        status=status.HTTP_400_BAD_REQUEST
+    )
