@@ -89,7 +89,7 @@ def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
     }
 )
 @api_view(['DELETE'])
-def TamanhoProdutos__delete(request, produto_id=None, tamanho_id=None):
+def TamanhoProdutos_delete(request, produto_id=None, tamanho_id=None):
 
     if request.method == "DELETE" and produto_id and tamanho_id:
         try:
