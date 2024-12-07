@@ -28,7 +28,7 @@ from collections import defaultdict
     operation_description='PUT api/v1/tamanho-produtos/',
     responses={200: TamanhoProdutoSerializer, 400: 'Erro de validação.', 404: 'Associação produto-tamanho não encontrada.'}
 )
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT'])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
     # GET: Agrupar tamanhos e preços no formato desejado
