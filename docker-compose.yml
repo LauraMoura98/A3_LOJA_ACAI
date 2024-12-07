@@ -9,7 +9,7 @@ services:
     volumes:
       - ./backend:/code
       - static_volume:/backend/loja_acai/static
-      - /home/ubuntu/data:/code/backend/data
+      - /home/ubuntu/data:/code/data
     expose:
       - 8000  
     networks:
