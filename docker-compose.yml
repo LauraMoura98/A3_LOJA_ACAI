@@ -5,11 +5,11 @@ services:
       dockerfile: Dockerfile.django
     container_name: django
     environment:
-      - DJANGO_DB_PATH=/code/db.sqlite3
+      - DJANGO_DB_PATH=/data/db.sqlite3
     volumes:
       - ./backend:/code
       - static_volume:/backend/loja_acai/static
-      - /home/ubuntu/data:/code
+      - /home/ubuntu/data:/code/data
     expose:
       - 8000  
     networks:
