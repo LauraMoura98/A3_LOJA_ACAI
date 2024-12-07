@@ -7,9 +7,9 @@ services:
     environment:
       - DJANGO_DB_PATH=/data/db.sqlite3
     volumes:
-      - ./backend:/app
+      - ./backend:/code
       - static_volume:/backend/loja_acai/static
-      - /home/ubuntu/data:/data
+      - /home/ubuntu/data:/code/backend/data
     expose:
       - 8000  
     networks:
