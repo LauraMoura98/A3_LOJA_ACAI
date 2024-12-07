@@ -12,7 +12,4 @@ COPY . /code
 
 EXPOSE 8000
 
-RUN python manage.py collectstatic --noinput
-RUN python manage.py migrate
-
-CMD ["gunicorn", "--config", "gunicorn_config.py", "loja_acai.wsgi:application"]
+CMD ["sh", "-c", "python manage.py makemigrations --noinput && python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn --config gunicorn_config.py loja_acai.wsgi:application"]
