@@ -4,7 +4,7 @@ from api_rest.views.produtos_views import produtos_geral, produtos_por_id
 from api_rest.views.acrescimos_views import acrescimos_geral, acrescimos_por_id
 from api_rest.views.tamanho_views import tamanhos_por_id, tamanhos_geral
 from api_rest.views.pedido_views import pedidos_geral, pedidos_por_id
-from api_rest.views.tamanho_produto_views import TamanhoProdutos_geral, TamanhoProdutos_delete
+from api_rest.views.tamanho_produto_views import TamanhoProdutos_geral
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
