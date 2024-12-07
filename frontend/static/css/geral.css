@@ -78,11 +78,17 @@
     
     #sobre-titulo{
         font-size:24px;
-        margin-left: 80px;
+        margin-left: 20px;
         color: #1C274C;
         
     }
     
+    #sobre-equipe{
+        font-size:24px;
+        text-align: center;
+        color: #1C274C;  
+    }
+
     #lipsum{
         font-size:14px;
         max-width: 50%;
