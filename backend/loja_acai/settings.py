@@ -93,12 +93,10 @@ WSGI_APPLICATION = 'loja_acai.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/code/db.sqlite3',
+        'NAME': '/home/ubuntu/data/db.sqlite3',
     }
 }
 
