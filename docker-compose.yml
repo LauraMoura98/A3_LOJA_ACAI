@@ -7,7 +7,7 @@ services:
     volumes:
       - ./backend:/app
       - static_volume:/backend/loja_acai/static
-      - ./backend/db.sqlite3:/app/db.sqlite3
+      - /home/ubuntu/data:/app/db.sqlite3
     expose:
       - 8000  
     networks:
@@ -34,4 +34,3 @@ networks:
 
 volumes:
   static_volume: 
-  db_data:
