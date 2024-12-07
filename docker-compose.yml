@@ -4,10 +4,12 @@ services:
       context: ./backend
       dockerfile: Dockerfile.django
     container_name: django
+    environment:
+      - DJANGO_DB_PATH=/data/db.sqlite3
     volumes:
       - ./backend:/app
       - static_volume:/backend/loja_acai/static
-      - /home/ubuntu/data:/home/ubuntu/data
+      - /home/ubuntu/data:/data
     expose:
       - 8000  
     networks:
