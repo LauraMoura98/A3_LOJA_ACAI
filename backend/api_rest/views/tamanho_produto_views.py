@@ -31,7 +31,7 @@ from collections import defaultdict
 @api_view(['GET', 'POST', 'PUT'])
 @permission_classes([AllowAny if "GET" else IsAuthenticated])
 def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
-    # GET: Agrupar tamanhos e preços no formato desejado
+
     if request.method == "GET":
         produtos = TamanhoProduto.objects.values("produto_id", "tamanho__nome", "preco").all()
 
@@ -51,23 +51,21 @@ def TamanhoProdutos_geral(request, produto_id=None, tamanho_id=None):
 
         return Response(resposta)
 
-    # POST: Criar uma nova associação entre produto e tamanho
     elif request.method == "POST":
-        serializer = TamanhoProdutoSerializer(data=request.data)
+        serializer = TamanhoProdutoSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # PUT: Atualizar dados de preço no banco
     elif request.method == "PUT":
         try:
-            # Busca a associação para atualizar
+
             produto_tamanho = TamanhoProduto.objects.get(
                 produto_id=request.data.get("produto_id"),
                 tamanho_id=request.data.get("tamanho_id")
             )
-            # Atualiza o preço
+
             produto_tamanho.preco = request.data.get("preco")
             produto_tamanho.save()
 
