@@ -12,13 +12,13 @@ class Pedido(models.Model):
         ('ENTREGUE', 'Entregue'),
     ]
     
-    cliente = models.ForeignKey(User, on_delete=models.CASCADE)  # Associando ao modelo padrão do Django
+    cliente = models.ForeignKey(User, on_delete=models.CASCADE)  
     status = models.CharField(max_length=15, choices=STATUS_PEDIDO, default='PENDENTE')
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
     senha = models.CharField(max_length=10, blank=True, null=True)
+    itens_pedido = models.ManyToManyField('ItemPedido')
 
-    # Geração automática da senha se não existir
     def save(self, *args, **kwargs):
         if not self.senha:
             self.senha = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))

@@ -101,12 +101,12 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    itens_pedido = ItemPedidoSerializer(many=True, write_only=True)
+    itens_pedido = ItemPedidoSerializer(many=True)
     senha = serializers.CharField(read_only=True)
 
     class Meta:
         model = Pedido
-        fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha']
+        fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'itens_pedido']
         read_only_fields = ['data_criacao', 'data_atualizacao']
 
     def create(self, validated_data):
