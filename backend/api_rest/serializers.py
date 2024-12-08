@@ -101,7 +101,7 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    items_pedido = ItemPedidoSerializer(many=True, read_only=True, source="itempedido_set")
+    itens_pedido = ItemPedidoSerializer(many=True, write_only=True)
 
     class Meta:
         model = Pedido
@@ -111,27 +111,24 @@ class PedidoSerializer(serializers.ModelSerializer):
             "data_criacao",
             "cliente",
             "senha",
-            "items_pedido",
+            "itens_pedido",
         ]
 
-    def to_representation(self, instance):
+    def create(self, validated_data):
+        itens_pedido_data = validated_data.pop('itens_pedido', [])
+        pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
 
-        representation = super().to_representation(instance)
+        for item_data in itens_pedido_data:
+            produto = Produto.objects.get(id=item_data['id_produto'])
+            tamanho_produto_nome = item_data.get("tamanho_produto")
+            tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
+            acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
 
-        dados = [
-            instance.id,
-            instance.status,
-            instance.data_criacao.strftime('%Y-%m-%d %H:%M'),
-            instance.user.id,
-            [
-                {
-                    "id_produto": item.produto.id,
-                    "tamanho_produto": item.tamanho.nome if item.tamanho else "",
-                    "acrescimos": [acrescimo.nome for acrescimo in item.acrescimos.all()],
-                }
-                for item in instance.itempedido_set.all()
-            ],
-            instance.senha,
-        ]
+            item_pedido = ItemPedido.objects.create(
+                pedido=pedido,
+                produto=produto,
+                tamanho=tamanho_produto,
+            )
+            item_pedido.acrescimos.set(acrescimos)
 
-        return dados
+        return pedido

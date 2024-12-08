@@ -12,6 +12,10 @@ from api_rest.serializers import (
 )
 
 from api_rest.models.pedido import Pedido
+from api_rest.models.tamanho_produto import TamanhoProduto
+from api_rest.models.produto import Produto
+from api_rest.models.acrescimos import Acrescimos
+from api_rest.models.item_pedido import ItemPedido
 
 
 class RegistroUsuarioViewSet(viewsets.ViewSet):
@@ -76,9 +80,36 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(cliente=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                # Salve o pedido
+                pedido = serializer.save(cliente=request.user)
+
+                # Validação para garantir que itens do pedido sejam salvos
+                itens_pedido = request.data.get('itens_pedido', [])
+                if itens_pedido:
+                    for item_data in itens_pedido:
+
+                        produto_id = item_data.get("id_produto")
+                        tamanho_produto_nome = item_data.get("tamanho_produto")
+                        acrescimos_nome = item_data.get("acrescimos", [])
+
+
+                        produto = Produto.objects.get(id=produto_id)
+                        tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
+                        acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nome)
+
+
+                        item_pedido = ItemPedido.objects.create(
+                            pedido=pedido,
+                            produto=produto,
+                            tamanho=tamanho_produto
+                        )
+                        item_pedido.acrescimos.set(acrescimos)
+                        item_pedido.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
