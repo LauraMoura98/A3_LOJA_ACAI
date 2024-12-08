@@ -32,6 +32,28 @@
     <div id="lista-pedidos"></div>
     <script src="static/js/carrinho.js"></script>
 
+<br>
+<div style="margin-left: 10px;">
+<button class="cta-button finalizar-compra"><a href="finalizar-compra.html" style="color:#fff;text-decoration: none">Finalizar compra</a></button>
+</div>
+<script>
+    // Função para verificar o token
+    function verificarToken() {
+        // Verifica se o token existe no localStorage
+        const token = localStorage.getItem('conta-token');
+        
+        if (!token) {
+            // Se o token não existir, desabilita o botão e exibe a mensagem
+            document.getElementById('finalizarCompraButton').onclick = function(event) {
+                event.preventDefault(); // Impede o redirecionamento
+                alert("Faça o Login antes de tentar finalizar a compra");
+            };
+        }
+    }
+
+    // Chama a função na carga da página
+    window.onload = verificarToken;
+</script>
 
 
 <br>
