@@ -122,8 +122,9 @@ class PedidoSerializer(serializers.ModelSerializer):
         # Criar os itens do pedido
         for item_data in itens_pedido_data:
             try:
-                # Buscar o produto pelo ID
-                produto = Produto.objects.get(id=item_data['produto'])
+                # Buscar o produto pelo nome
+                produto_nome = item_data.get("produto")
+                produto = Produto.objects.filter(nome=produto_nome).first()
                 # Buscar o tamanho pelo nome
                 tamanho_nome = item_data.get("tamanho")
                 tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
@@ -133,7 +134,6 @@ class PedidoSerializer(serializers.ModelSerializer):
 
                 # Criar o item do pedido
                 item_pedido = ItemPedido.objects.create(
-                    pedido=pedido_existente,
                     produto=produto,
                     tamanho=tamanho,
                 )
