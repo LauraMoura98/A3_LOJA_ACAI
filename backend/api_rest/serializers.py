@@ -111,7 +111,6 @@ class PedidoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-        # Remove o campo cliente dos dados validados
         request_user = self.context['request'].user
         itens_pedido_data = validated_data.pop('itens_pedido', [])
 
@@ -134,7 +133,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             return pedido_existente
 
         # Cria um novo pedido para o cliente autenticado
-        pedido = Pedido.objects.create(cliente=request_user, **validated_data)
+        pedido = Pedido.objects.create(**validated_data, cliente=request_user)
 
         for item_data in itens_pedido_data:
             produto = Produto.objects.get(id=item_data['id_produto'])
