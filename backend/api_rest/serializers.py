@@ -107,22 +107,36 @@ class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pedido
         fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'itens_pedido']
-        read_only_fields = ['data_criacao', 'data_atualizacao']
+        read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
+        # Extrai itens_pedido do POST
         itens_pedido_data = validated_data.pop('itens_pedido', [])
         pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
 
+        # Processa os dados do pedido
         for item_data in itens_pedido_data:
-            produto = Produto.objects.get(id=item_data['id_produto'])
-            tamanho_produto_nome = item_data.get("tamanho_produto")
-            tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
-            acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
+            try:
+                # Busca instância do produto
+                produto = Produto.objects.get(id=item_data['id_produto'])
 
-            item_pedido = ItemPedido.objects.create(
-                produto=produto,
-                tamanho=tamanho_produto,
-            )
-            item_pedido.acrescimos.set(acrescimos)
+                # Busca instância do tamanho
+                tamanho_produto = TamanhoProduto.objects.get(id=item_data['id_tamanho'])
+
+                # Busca acréscimos
+                acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
+
+                # Cria a relação no banco
+                item_pedido = ItemPedido.objects.create(
+                    pedido=pedido,
+                    produto=produto,
+                    tamanho=tamanho_produto,
+                )
+                item_pedido.acrescimos.set(acrescimos)
+
+            except Produto.DoesNotExist:
+                raise serializers.ValidationError({'id_produto': 'Produto não encontrado'})
+            except TamanhoProduto.DoesNotExist:
+                raise serializers.ValidationError({'id_tamanho': 'Tamanho do produto não encontrado'})
 
         return pedido
