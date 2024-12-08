@@ -120,7 +120,6 @@ class PedidoSerializer(serializers.ModelSerializer):
             acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
 
             item_pedido = ItemPedido.objects.create(
-                pedido=pedido,
                 produto=produto,
                 tamanho=tamanho_produto,
             )
