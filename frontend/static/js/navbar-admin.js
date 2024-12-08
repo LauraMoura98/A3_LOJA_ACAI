@@ -16,6 +16,7 @@ function loadNavbar() {
                 </div>
                 <div class="menu" id="navbarMenu">
                 <a href="login.html">LOGIN</a>
+                <a href="pedidos.html">PEDIDOS</a>
                 <a href="criar.html">CRIAR</a>
                 <a href="editar.html">EDITAR</a>
                 <a href="tamanhos.html">TAMANHOS</a>
@@ -29,6 +30,7 @@ function loadNavbar() {
                 <img src="../static/img/Logo.png" class="logo" alt="Logo">
                 <div class="nav-links">
                 <a href="login.html">LOGIN</a>
+                <a href="pedidos.html">PEDIDOS</a>
                 <a href="criar.html">CRIAR</a>
                 <a href="editar.html">EDITAR</a>
                 <a href="tamanhos.html">TAMANHOS</a>

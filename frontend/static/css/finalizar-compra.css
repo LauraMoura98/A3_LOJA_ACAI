@@ -24,16 +24,6 @@ button {
     color: white;
 }
 
-/* Estilo específico para o botão Comprar */
-.comprar {
-    background-color: #28a745;
-    color: white;
-}
-
-.comprar:hover {
-    background-color: #218838;
-}
-
 #uniDIV{
     align-items: center;
     width: 50%; 
