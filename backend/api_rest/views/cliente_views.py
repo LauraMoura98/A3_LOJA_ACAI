@@ -80,36 +80,57 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            try:
-                # Salve o pedido
+        try:
+            serializer = self.get_serializer(data=request.data)
+
+            # Verifique os dados recebidos no POST
+            print("Dados recebidos no POST:", request.data)
+
+            if serializer.is_valid():
                 pedido = serializer.save(cliente=request.user)
 
-                # Validação para garantir que itens do pedido sejam salvos
-                itens_pedido = request.data.get('itens_pedido', [])
-                if itens_pedido:
-                    for item_data in itens_pedido:
+                # Verifique a criação do pedido
+                print("Pedido salvo:", pedido)
 
+                # Processando itens do pedido
+                itens_pedido_data = request.data.get('itens_pedido', [])
+                for item_data in itens_pedido_data:
+                    try:
                         produto_id = item_data.get("id_produto")
                         tamanho_produto_nome = item_data.get("tamanho_produto")
                         acrescimos_nome = item_data.get("acrescimos", [])
 
-
+                        # Validação dos dados do produto
                         produto = Produto.objects.get(id=produto_id)
+
+                        # Validando tamanho e acrescimos
                         tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
                         acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nome)
 
-
+                        # Criando item do pedido
                         item_pedido = ItemPedido.objects.create(
                             pedido=pedido,
                             produto=produto,
-                            tamanho=tamanho_produto
+                            tamanho=tamanho_produto,
                         )
                         item_pedido.acrescimos.set(acrescimos)
                         item_pedido.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        # Log da criação do item
+                        print("Item do pedido salvo:", item_pedido)
+
+                    except Exception as e:
+                        # Log detalhado sobre erro no item
+                        print(f"Erro ao processar item de pedido: {e}")
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            # Caso o serializer seja inválido
+            print("Erro no serializer:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            # Log completo da exceção
+            print("Erro fatal no método create:", str(e))
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
