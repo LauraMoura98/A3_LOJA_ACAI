@@ -4,6 +4,20 @@ Todas as mudanças importantes para este projeto serão documentadas neste arqui
 ## [2024-12-07]
 
 ### Adicionado
+- Páginas de carrinho, confirmação de compra e admin de pedidos
+- Sistemas de pedidos e de login e cadastro de conta
+- Forma de apagar tamanho-pedidos
+- 
+### Corrigido
+- Carregamento dos atributos dos produtos
+- Corrigir erro ao adicionar acréscimo
+
+### Alterado
+- Página de produtos
+
+## [2024-12-07]
+
+### Adicionado
 - Páginas de administração
 
 ### Corrigido
