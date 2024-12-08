@@ -1,0 +1,46 @@
+/* Estilo base comum para ambos os botões */
+button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+/* Estilo específico para o botão Cancelar */
+.cancelar {
+    background-color: #6c757d;
+}
+
+.cancelar:hover {
+    background-color: #5a6268;
+}
+
+/* Removendo a decoração padrão do link dentro do botão cancelar */
+.cancelar a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Estilo específico para o botão Comprar */
+.comprar {
+    background-color: #28a745;
+    color: white;
+}
+
+.comprar:hover {
+    background-color: #218838;
+}
+
+#uniDIV{
+    align-items: center;
+    width: 50%; 
+    margin: auto;
+}
+
+#uniDIV2{
+    margin-top: 30%;
+
+}
