@@ -110,27 +110,30 @@ class PedidoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-        # Remover os dados relacionados aos itens do pedido
         itens_pedido_data = validated_data.pop('itens_pedido', [])
-        user = self.context['request'].user
+        user = self.context['request'].user  # Obter usuário autenticado
 
-        # Recuperar ou criar um pedido
+        # Buscar ou criar pedido existente
         pedido_existente = Pedido.objects.filter(cliente=user, status='PENDENTE').first()
         if not pedido_existente:
             pedido_existente = Pedido.objects.create(cliente=user, **validated_data)
 
-        # Criar ou atualizar os itens do pedido
         for item_data in itens_pedido_data:
-            produto = Produto.objects.get(id=item_data['id_produto'])
-            tamanho_nome = item_data.get("tamanho")
-            tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
-            acrescimos = Acrescimos.objects.filter(nome__in=item_data.get('acrescimos', []))
+            try:
+                # Buscar produto pelo ID no campo `produto`
+                produto = Produto.objects.get(id=item_data['produto'])
+                tamanho_nome = item_data.get("tamanho")
+                tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
+                acrescimos = Acrescimos.objects.filter(nome__in=item_data.get('acrescimos', []))
 
-            item_pedido = ItemPedido.objects.create(
-                pedido=pedido_existente,
-                produto=produto,
-                tamanho=tamanho,
-            )
-            item_pedido.acrescimos.set(acrescimos)
+                # Criar o item do pedido
+                item_pedido = ItemPedido.objects.create(
+                    pedido=pedido_existente,
+                    produto=produto,
+                    tamanho=tamanho,
+                )
+                item_pedido.acrescimos.set(acrescimos)
+            except Produto.DoesNotExist:
+                raise serializers.ValidationError({"error": f"Produto com id {item_data['produto']} não existe."})
 
         return pedido_existente
