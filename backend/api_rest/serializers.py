@@ -107,17 +107,18 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'itens_pedido']
+        fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'itens_pedido']
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-
+        # Remove o campo cliente dos dados validados
+        request_user = self.context['request'].user
         itens_pedido_data = validated_data.pop('itens_pedido', [])
 
-        pedido_existente = Pedido.objects.filter(cliente=validated_data['cliente'], status='PENDENTE').first()
+        # Verifica se já existe um pedido pendente para o cliente autenticado
+        pedido_existente = Pedido.objects.filter(cliente=request_user, status='PENDENTE').first()
 
         if pedido_existente:
-
             for item_data in itens_pedido_data:
                 produto = Produto.objects.get(id=item_data['id_produto'])
                 tamanho_produto_nome = item_data.get("tamanho_produto")
@@ -132,7 +133,8 @@ class PedidoSerializer(serializers.ModelSerializer):
                 item_pedido.acrescimos.set(acrescimos)
             return pedido_existente
 
-        pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
+        # Cria um novo pedido para o cliente autenticado
+        pedido = Pedido.objects.create(cliente=request_user, **validated_data)
 
         for item_data in itens_pedido_data:
             produto = Produto.objects.get(id=item_data['id_produto'])
