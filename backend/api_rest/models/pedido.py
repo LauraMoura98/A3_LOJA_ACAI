@@ -11,7 +11,7 @@ class Pedido(models.Model):
         ('PRONTO', 'Pronto para retirada'),
         ('ENTREGUE', 'Entregue'),
     ]
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='pedidos')
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='pedidos', default=1)
     status = models.CharField(max_length=15, choices=STATUS_PEDIDO, default='PENDENTE')
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
