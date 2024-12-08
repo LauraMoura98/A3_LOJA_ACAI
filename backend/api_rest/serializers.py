@@ -92,23 +92,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
     produto = serializers.StringRelatedField()
-    tamanho = serializers.StringRelatedField(allow_null=True)
+    tamanho = serializers.CharField()
     acrescimos = serializers.StringRelatedField(many=True)
-
-    id_produto = serializers.IntegerField(write_only=True)
-    tamanho_produto = serializers.CharField(write_only=True, required=False, allow_null=True)
-    acrescimos = serializers.ListField(
-        child=serializers.CharField(), write_only=True, required=False
-    )
 
     class Meta:
         model = ItemPedido
-        fields = ['produto', 'tamanho', 'acrescimos', 'id_produto', 'tamanho_produto']
+        fields = ['produto', 'tamanho', 'acrescimos']
 
-    def validate(self, data):
-        if 'id_produto' not in data:
-            raise serializers.ValidationError({"id_produto": "Este campo é obrigatório."})
-        return data
 
 class PedidoSerializer(serializers.ModelSerializer):
     itens_pedido = ItemPedidoSerializer(many=True)
@@ -120,62 +110,27 @@ class PedidoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-        # Obtém o cliente autenticado do contexto
-        request_user = self.context['request'].user
-
-        # Remove itens_pedido dos dados validados para processamento posterior
+        # Remover os dados relacionados aos itens do pedido
         itens_pedido_data = validated_data.pop('itens_pedido', [])
+        user = self.context['request'].user
 
-        # Remove o cliente de validated_data, se existir
-        validated_data.pop('cliente', None)
+        # Recuperar ou criar um pedido
+        pedido_existente = Pedido.objects.filter(cliente=user, status='PENDENTE').first()
+        if not pedido_existente:
+            pedido_existente = Pedido.objects.create(cliente=user, **validated_data)
 
-        # Verifica se há um pedido pendente para o cliente autenticado
-        pedido_existente = Pedido.objects.filter(cliente=request_user, status='PENDENTE').first()
-
-        if pedido_existente:
-            for item_data in itens_pedido_data:
-                # Valida a presença de id_produto
-                id_produto = item_data.get('id_produto')
-                if not id_produto:
-                    raise serializers.ValidationError({'id_produto': 'Este campo é obrigatório.'})
-
-                produto = Produto.objects.get(id=id_produto)
-                tamanho_produto_nome = item_data.get('tamanho_produto')
-                acrescimos_nome = item_data.get('acrescimos', [])
-
-                tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
-                acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nome)
-
-                # Cria o item do pedido e associa os acrescimos
-                item_pedido = ItemPedido.objects.create(
-                    pedido=pedido_existente,
-                    produto=produto,
-                    tamanho=tamanho_produto,
-                )
-                item_pedido.acrescimos.set(acrescimos)
-            return pedido_existente
-
-        # Caso contrário, cria um novo pedido
-        pedido = Pedido.objects.create(cliente=request_user, **validated_data)
-
+        # Criar ou atualizar os itens do pedido
         for item_data in itens_pedido_data:
-            id_produto = item_data.get('id_produto')
-            if not id_produto:
-                raise serializers.ValidationError({'id_produto': 'Este campo é obrigatório.'})
+            produto = Produto.objects.get(id=item_data['id_produto'])
+            tamanho_nome = item_data.get("tamanho")
+            tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
+            acrescimos = Acrescimos.objects.filter(nome__in=item_data.get('acrescimos', []))
 
-            produto = Produto.objects.get(id=id_produto)
-            tamanho_produto_nome = item_data.get('tamanho_produto')
-            acrescimos_nome = item_data.get('acrescimos', [])
-
-            tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
-            acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nome)
-
-            # Cria o item do pedido e associa os acrescimos
             item_pedido = ItemPedido.objects.create(
-                pedido=pedido,
+                pedido=pedido_existente,
                 produto=produto,
-                tamanho=tamanho_produto,
+                tamanho=tamanho,
             )
             item_pedido.acrescimos.set(acrescimos)
 
-        return pedido
+        return pedido_existente
