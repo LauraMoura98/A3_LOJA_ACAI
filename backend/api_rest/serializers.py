@@ -113,27 +113,37 @@ class PedidoSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         itens_pedido_data = validated_data.pop('itens_pedido', [])
-        pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
 
-        for item_data in itens_pedido_data:
-            try:
+        pedido_existente = Pedido.objects.filter(cliente=validated_data['cliente'], status='PENDENTE').first()
 
+        if pedido_existente:
+
+            for item_data in itens_pedido_data:
                 produto = Produto.objects.get(id=item_data['id_produto'])
-
-                tamanho_produto = TamanhoProduto.objects.get(id=item_data['id_tamanho'])
-
+                tamanho_produto_nome = item_data.get("tamanho_produto")
+                tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
                 acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
 
                 item_pedido = ItemPedido.objects.create(
-                    pedido=pedido,
+                    pedido=pedido_existente,
                     produto=produto,
                     tamanho=tamanho_produto,
                 )
                 item_pedido.acrescimos.set(acrescimos)
+            return pedido_existente
 
-            except Produto.DoesNotExist:
-                raise serializers.ValidationError({'id_produto': 'Produto não encontrado'})
-            except TamanhoProduto.DoesNotExist:
-                raise serializers.ValidationError({'id_tamanho': 'Tamanho do produto não encontrado'})
+        pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
+
+        for item_data in itens_pedido_data:
+            produto = Produto.objects.get(id=item_data['id_produto'])
+            tamanho_produto_nome = item_data.get("tamanho_produto")
+            tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
+            acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
+
+            ItemPedido.objects.create(
+                pedido=pedido,
+                produto=produto,
+                tamanho=tamanho_produto,
+            ).acrescimos.set(acrescimos)
 
         return pedido
