@@ -1,175 +1,261 @@
-$(document).ready(function () {
-    // URLs da API
-    const apiURLProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/produtos/";
-    const apiURLCategoria = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/categorias/";
-    const apiURLAcrescimos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/acrescimos/";
-    const apiURLTamanhos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/tamanhos/";
-    const apiURLTamanhoProdutos = "https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/tamanho-produtos/";
+// Cache dos dados
+let produtosCache = [];
+let categoriasCache = [];
+let acrescimosCache = [];
+let tamanhosCache = [];
+let tamanhoProdutosCache = [];
 
-    let produtosCache = [];
-    let categoriasCache = [];
-    let acrescimosCache = [];
-    let tamanhosCache = [];
-    let tamanhoProdutosCache = []; // Cache para armazenar os tamanhos e seus preços
+// URLs da API
+const API_BASE = 'https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1';
+const ENDPOINTS = {
+    produtos: `${API_BASE}/produtos/`,
+    categorias: `${API_BASE}/categorias/`,
+    acrescimos: `${API_BASE}/acrescimos/`,
+    tamanhos: `${API_BASE}/tamanhos/`,
+    tamanhoProdutos: `${API_BASE}/tamanho-produtos/`
+};
 
-    // Função para buscar e renderizar categorias e produtos
-    function buscarProdutosECategorias() {
-        // Busca categorias
-        $.ajax({
-            url: apiURLCategoria,
-            type: "GET",
-            dataType: "json",
-            success: function (categorias) {
-                categoriasCache = categorias;
+// Funções auxiliares
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return [];
+    }
+}
 
-                // Após buscar categorias, busca produtos
-                $.ajax({
-                    url: apiURLProdutos,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (produtos) {
-                        produtosCache = produtos;
+function renderizarNavbar() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar) return;
 
-                        // Busca acréscimos
-                        $.ajax({
-                            url: apiURLAcrescimos,
-                            type: "GET",
-                            dataType: "json",
-                            success: function (acrescimos) {
-                                acrescimosCache = acrescimos;
+    const categoriasComProdutos = categoriasCache.filter(categoria =>
+        produtosCache.some(produto => produto.categoria === categoria.nome)
+    );
 
-                                // Busca tamanhos
-                                $.ajax({
-                                    url: apiURLTamanhos,
-                                    type: "GET",
-                                    dataType: "json",
-                                    success: function (tamanhos) {
-                                        tamanhosCache = tamanhos;
+    const html = `
+        <div class="navbar-categorias">
+            <button class="categoria-filtro" data-categoria="todos">Todos</button>
+            ${categoriasComProdutos.map(categoria => `
+                <button class="categoria-filtro" data-categoria="${categoria.nome}">
+                    ${categoria.nome}
+                </button>
+            `).join('')}
+        </div>
+    `;
 
-                                        // Busca tamanhos de produtos
-                                        $.ajax({
-                                            url: apiURLTamanhoProdutos,
-                                            type: "GET",
-                                            dataType: "json",
-                                            success: function (tamanhoProdutos) {
-                                                tamanhoProdutosCache = tamanhoProdutos;
-                                                renderizarNavbar();
-                                                renderizarProdutos();
-                                            },
-                                            error: function () {
-                                                console.error("Erro ao buscar tamanhos de produtos.");
-                                            }
-                                        });
-                                    },
-                                    error: function () {
-                                        console.error("Erro ao buscar tamanhos.");
-                                    }
-                                });
-                            },
-                            error: function () {
-                                console.error("Erro ao buscar acréscimos.");
-                            }
-                        });
-                    },
-                    error: function () {
-                        console.error("Erro ao buscar produtos.");
-                        $("#lista-produtos").html("<p>Erro ao carregar produtos.</p>");
-                    }
-                });
-            },
-            error: function () {
-                console.error("Erro ao buscar categorias.");
-                $("#navbar").html("<p>Erro ao carregar, servidor offline.</p>");
-            }
+    navbar.innerHTML = html;
+
+    // Adicionar event listeners
+    document.querySelectorAll('.categoria-filtro').forEach(button => {
+        button.addEventListener('click', () => {
+            const categoria = button.dataset.categoria;
+            renderizarProdutos(categoria);
         });
-    }
+    });
+}
 
-    // Função para renderizar a navbar de categorias
-    function renderizarNavbar() {
-        const categoriasComProdutos = categoriasCache.filter(categoria =>
-            produtosCache.some(produto => produto.categoria === categoria.nome)
-        );
+function renderizarProdutos(categoriaSelecionada = 'todos') {
+    const container = document.getElementById('lista-produtos');
+    if (!container) return;
 
-        if (categoriasComProdutos.length === 0) {
-            $("#navbar").html("<p>Nenhuma categoria disponível.</p>");
-            return;
-        }
+    const produtosFiltrados = categoriaSelecionada === 'todos'
+        ? produtosCache
+        : produtosCache.filter(produto => produto.categoria === categoriaSelecionada);
 
-        const navbarHTML = `
-            <div class="navbar-categorias">
-                <button class="categoria-filtro" data-categoria="todos">Todos</button>
-                ${categoriasComProdutos
-                    .map(categoria => `
-                    <button class="categoria-filtro" data-categoria="${categoria.nome}">${categoria.nome}</button>
-                `).join("")}
-            </div>
-        `;
-        $("#navbar").html(navbarHTML);
-
-        // Configura os eventos de clique para os botões da navbar
-        $(".categoria-filtro").on("click", function () {
-            const categoriaSelecionada = $(this).data("categoria");
-            renderizarProdutos(categoriaSelecionada);
-        });
-    }
-
-// Função para renderizar os produtos com base na categoria selecionada
-function renderizarProdutos(categoriaSelecionada = "todos") {
-    const $container = $("#lista-produtos");
-    $container.empty();
-
-    const produtosFiltrados =
-        categoriaSelecionada === "todos"
-            ? produtosCache
-            : produtosCache.filter(produto => produto.categoria === categoriaSelecionada);
-
-    if (produtosFiltrados.length === 0) {
-        $container.html("<p>Nenhum produto encontrado nesta categoria.</p>");
-        return;
-    }
-
-    produtosFiltrados.forEach(produto => {
-        // Encontrar o menor preço entre os tamanhos disponíveis para o produto
+    const html = produtosFiltrados.map(produto => {
         const tamanhoProduto = tamanhoProdutosCache.find(tp => tp.Produto === produto.id);
-        const precosTamanhos = tamanhoProduto ? Object.values(tamanhoProduto.Tamanhos) : [];
-        const menorPreco = precosTamanhos.length > 0 ? Math.min(...precosTamanhos) : null;
+        
+        // Obter o menor preço
+        const menorPreco = tamanhoProduto
+            ? Math.min(...Object.values(tamanhoProduto.Tamanhos))
+            : null;
 
-        // Obter tamanhos disponíveis com descrições
-        const tamanhosDisponiveis = tamanhoProduto
-            ? Object.entries(tamanhoProduto.Tamanhos).map(([nome, id]) => {
-                const tamanho = tamanhosCache.find(t => t.id === id);
-                return tamanho ? `${tamanho.descricao} (${nome})` : null;
-            }).filter(Boolean).join(", ")
-            : "Indisponível";
-
-        const acrescimosDisponiveis = produto.acrescimos.map(acresimoId => {
-            const acresimo = acrescimosCache.find(ac => ac.id === acresimoId);
-            return acresimo ? `${acresimo.nome} (R$ ${acresimo.preco_adicional})` : null;
-        }).filter(Boolean).join(", ") || "Nenhum acréscimo disponível";
-
-        const produtoHTML = `
-            <div class="produtos-item">
+        return `
+            <div class="produtos-item" data-produto-id="${produto.id}">
                 <div class="produtos-imagem">
                     <img src="${produto.imagem_url}" alt="${produto.nome}">
                 </div>
                 <div class="produtos-detalhes">
                     <h3>${produto.nome}</h3>
-                    <p><strong>Tamanhos disponíveis:</strong> ${tamanhosDisponiveis}</p>
-                    <p><strong>Descrição do produto:</strong> ${produto.descricao || ""}</p>
-                    <p><strong>Acréscimos disponíveis:</strong> ${acrescimosDisponiveis}</p>
+                    <p><strong>Descrição:</strong> ${produto.descricao || ''}</p>
                 </div>
                 <div class="divisor"></div>
-                <div class="produtos-preco">
-                    <p>A partir de</p>
-                    <p>R$ ${menorPreco !== null ? menorPreco.toFixed(2).replace('.', ',') : "Indisponível"}</p>
+                <div class="preco-menor">
+                    ${menorPreco !== null ? `Menor preço: <strong>R$ ${menorPreco.toFixed(2)}</strong>` : 'Preço indisponível'}
                 </div>
             </div>
         `;
-        $container.append(produtoHTML);
+    }).join('');
+
+    container.innerHTML = html;
+
+    // Adicionar event listeners para os produtos
+    document.querySelectorAll('.produtos-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const produtoId = parseInt(item.dataset.produtoId);
+            const produto = produtosCache.find(p => p.id === produtoId);
+            if (produto) mostrarModalSelecao(produto);
+        });
     });
 }
 
 
-    // Chama a função inicial ao carregar a página
-    buscarProdutosECategorias();
-});
+function mostrarModalSelecao(produto) {
+    const tamanhoProduto = tamanhoProdutosCache.find(tp => tp.Produto === produto.id);
+
+    // Criar o modal
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+
+    const tamanhosHTML = tamanhoProduto
+        ? Object.entries(tamanhoProduto.Tamanhos).map(([nome, preco]) => {
+            const tamanho = tamanhosCache.find(t => t.nome === nome); // Localiza a descrição pelo nome do tamanho
+            return tamanho
+                ? `
+                    <div class="opcao-tamanho">
+                        <input type="radio" name="tamanho" value="${nome}" id="tamanho-${nome}">
+                        <label for="tamanho-${nome}">
+                            ${tamanho.descricao} - R$ ${preco.toFixed(2).replace('.', ',')}
+                        </label>
+                    </div>
+                `
+                : '';
+        }).join('')
+        : '<p>Nenhum tamanho disponível</p>';
+
+    const modalHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>${produto.nome}</h2>
+                <button class="fechar-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img src="${produto.imagem_url}" alt="${produto.nome}" style="max-width: 200px;">
+                <p>${produto.descricao}</p>
+
+                <div class="secao-tamanhos">
+                    <h3>Escolha o tamanho:</h3>
+                    <div class="opcoes-tamanhos">
+                        ${tamanhosHTML}
+                    </div>
+                </div>
+
+                <div class="secao-acrescimos">
+                    <h3>Acréscimos disponíveis:</h3>
+                    <div class="opcoes-acrescimos">
+                        ${(produto.acrescimos || []).map(acrescimoNome => {
+                            const acrescimo = acrescimosCache.find(a => a.nome === acrescimoNome);
+                            return acrescimo ? `
+                                <div class="opcao-acrescimo">
+                                    <input type="checkbox" name="acrescimo" value="${acrescimo.id}" id="acrescimo-${acrescimo.id}">
+                                    <label for="acrescimo-${acrescimo.id}">
+                                        ${acrescimo.nome} (+R$ ${acrescimo.preco_adicional.replace('.', ',')})
+                                    </label>
+                                </div>
+                            ` : '';
+                        }).join('')}
+                    </div>
+                </div>
+
+                <button class="adicionar-carrinho">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    `;
+
+    modalOverlay.innerHTML = modalHTML;
+    document.body.appendChild(modalOverlay);
+
+    // Adicionar event listeners do modal
+    modalOverlay.querySelector('.fechar-modal').addEventListener('click', () => {
+        modalOverlay.remove();
+    });
+
+    modalOverlay.querySelector('.adicionar-carrinho').addEventListener('click', () => {
+        const tamanhoSelecionado = modalOverlay.querySelector('input[name="tamanho"]:checked')?.value;
+        const acrescimosSelecionados = Array.from(
+            modalOverlay.querySelectorAll('input[name="acrescimo"]:checked')
+        ).map(input => input.value);
+    
+        if (!tamanhoSelecionado) {
+            alert('Por favor, selecione um tamanho.');
+            return;
+        }
+    
+        // Adicionar ao carrinho (cookie)
+        adicionarAoCarrinho(produto.id, tamanhoSelecionado, acrescimosSelecionados);
+        
+        modalOverlay.remove();
+        alert('Produto adicionado ao carrinho!');
+    });
+    
+}
+
+
+
+// Função principal para inicializar
+async function inicializarAplicacao() {
+    try {
+        // Buscar todos os dados necessários
+        const [produtos, categorias, acrescimos, tamanhos, tamanhoProdutos] = await Promise.all([
+            fetchData(ENDPOINTS.produtos),
+            fetchData(ENDPOINTS.categorias),
+            fetchData(ENDPOINTS.acrescimos),
+            fetchData(ENDPOINTS.tamanhos),
+            fetchData(ENDPOINTS.tamanhoProdutos)
+        ]);
+
+        // Atualizar o cache
+        produtosCache = produtos;
+        categoriasCache = categorias;
+        acrescimosCache = acrescimos;
+        tamanhosCache = tamanhos;
+        tamanhoProdutosCache = tamanhoProdutos;
+
+        // Renderizar a interface
+        renderizarNavbar();
+        renderizarProdutos();
+    } catch (error) {
+        console.error('Erro ao inicializar a aplicação:', error);
+        document.getElementById('navbar').innerHTML = '<p>Erro ao carregar dados do servidor.</p>';
+    }
+}
+
+// Função para definir um cookie
+function setCookie(nome, valor, dias) {
+    const dataExpiracao = new Date();
+    dataExpiracao.setTime(dataExpiracao.getTime() + (dias * 24 * 60 * 60 * 1000)); // Expiração em dias
+    const valorCodificado = encodeURIComponent(valor);
+    document.cookie = `${nome}=${valorCodificado};expires=${dataExpiracao.toUTCString()};path=/`;
+}
+
+// Função para obter um cookie
+function getCookie(nome) {
+    const nomeIgual = `${nome}=`;
+    const partes = document.cookie.split(';');
+    for (let i = 0; i < partes.length; i++) {
+        let parte = partes[i].trim();
+        if (parte.indexOf(nomeIgual) === 0) {
+            return decodeURIComponent(parte.substring(nomeIgual.length, parte.length));
+        }
+    }
+    return "";
+}
+
+// Função para adicionar um pedido ao cookie
+function adicionarAoCarrinho(produtoId, tamanhoProduto, acrescimos) {
+    // Recuperar o cookie existente, ou criar um novo se não existir
+    const pedidos = JSON.parse(getCookie('pedidos') || '[]');
+
+    // Adicionar novo pedido
+    pedidos.push({ id_produto: produtoId, tamanho_produto: tamanhoProduto, acrescimos });
+
+    // Atualizar o cookie com a nova lista de pedidos
+    setCookie('pedidos', JSON.stringify(pedidos), 7); // Expira em 7 dias
+}
+
+
+// Iniciar a aplicação quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', inicializarAplicacao);
