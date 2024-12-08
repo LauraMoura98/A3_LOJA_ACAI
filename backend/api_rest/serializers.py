@@ -67,7 +67,7 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User  
+        model = User
         fields = ['id', 'username', 'password', 'email']
 
     def create(self, validated_data):
@@ -111,23 +111,19 @@ class PedidoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-        # Extrai itens_pedido do POST
+
         itens_pedido_data = validated_data.pop('itens_pedido', [])
         pedido = Pedido.objects.create(cliente=validated_data['cliente'], **validated_data)
 
-        # Processa os dados do pedido
         for item_data in itens_pedido_data:
             try:
-                # Busca instância do produto
+
                 produto = Produto.objects.get(id=item_data['id_produto'])
 
-                # Busca instância do tamanho
                 tamanho_produto = TamanhoProduto.objects.get(id=item_data['id_tamanho'])
 
-                # Busca acréscimos
                 acrescimos = Acrescimos.objects.filter(nome__in=item_data['acrescimos'])
 
-                # Cria a relação no banco
                 item_pedido = ItemPedido.objects.create(
                     pedido=pedido,
                     produto=produto,
