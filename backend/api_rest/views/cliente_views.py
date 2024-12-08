@@ -2,6 +2,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from api_rest.serializers import (
     RegistroUsuarioSerializer,
@@ -44,13 +46,13 @@ class LoginUsuarioView(TokenObtainPairView):
         return super().post(request, *args, **kwargs)
 
 
-# ViewSet para gerenciamento de pedidos do usuário autenticado
-class PedidoViewSet(viewsets.ModelViewSet):
+class PedidoViewSet(ModelViewSet):
     serializer_class = PedidoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Pedido.objects.filter(cliente=self.request.user.cliente)
+        # A consulta considera apenas os dados do usuário autenticado
+        return Pedido.objects.filter(cliente=self.request.user)
 
     @swagger_auto_schema(
         operation_summary="Listar pedidos do usuário autenticado",
@@ -61,6 +63,7 @@ class PedidoViewSet(viewsets.ModelViewSet):
         },
     )
     def list(self, request, *args, **kwargs):
+        # Retorna a lista de pedidos para o usuário autenticado.
         return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
@@ -73,8 +76,9 @@ class PedidoViewSet(viewsets.ModelViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
+        # Salva o pedido diretamente para o usuário autenticado.
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(cliente=request.user.cliente)
+            serializer.save(cliente=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

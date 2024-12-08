@@ -7,7 +7,6 @@ from .models.categoria import Categoria
 from .models.acrescimos import Acrescimos
 from .models.tamanho import Tamanho
 from .models.tamanho_produto import TamanhoProduto
-from .models.cliente import Cliente
 from .models.pedido import Pedido
 from .models.item_pedido import ItemPedido
 
@@ -60,24 +59,23 @@ class TamanhoProdutoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-Usuario = get_user_model()
+User = get_user_model()
 
 
 class RegistroUsuarioSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = Cliente
-        fields = ['id', 'username', 'password', 'email', 'telefone']
+        model = User  # Referencie User diretamente aqui
+        fields = ['id', 'username', 'password', 'email']
 
     def create(self, validated_data):
-        cliente = Cliente.objects.create_user(
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            telefone=validated_data.get('telefone', ''),
             password=validated_data['password']
         )
-        return cliente
+        return user
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -98,16 +96,7 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    cliente = serializers.CharField(source='cliente.id')
-    itens = ItemPedidoSerializer(many=True)
-
     class Meta:
         model = Pedido
-        fields = [
-            'id',
-            'status',
-            'data_criacao',
-            'cliente',
-            'itens',
-            'senha'
-        ]
+        fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha']
+        read_only_fields = ['id', 'cliente']
