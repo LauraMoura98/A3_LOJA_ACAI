@@ -1,0 +1,85 @@
+.form-container {
+max-width: 400px;
+margin: 0 auto;
+padding: 20px;
+border: 1px solid #ddd;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+background-color: #f9f9f9;
+}
+
+.form-container h2 {
+text-align: center;
+margin-bottom: 20px;
+color: #333;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container input[type="email"],
+.form-container button {
+width: 100%;
+padding: 10px;
+margin: 10px 0;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+.form-container button {
+background-color: #4CAF50;
+color: white;
+cursor: pointer;
+}
+
+.form-container button:hover {
+background-color: #45a049;
+}
+
+.hidden {
+display: none;
+}
+
+.active {
+font-weight: bold;
+color: #4CAF50;
+}
+
+#welcomeMessage {
+text-align: center;
+margin-top: 20px;
+font-size: 18px;
+color: #333;
+}
+
+#tabs {
+text-align: center;
+margin: 20px 0;
+}
+
+#tabs button {
+padding: 10px 20px;
+margin: 0 5px;
+cursor: pointer;
+border: none;
+background: none;
+border-bottom: 2px solid transparent;
+}
+
+#tabs .active {
+border-bottom: 2px solid #4CAF50;
+}
+
+#logout {
+    margin-top: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logout:hover {
+    background-color: #c82333;
+}

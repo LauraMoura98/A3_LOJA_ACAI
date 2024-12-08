@@ -1,0 +1,41 @@
+.pedido-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.pedido-item .produto {
+    display: flex;
+    flex-direction: column;
+}
+
+.remover-pedido {
+    margin-top: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remover-pedido:hover {
+    background-color: #c82333;
+}
+
+.produto {
+    min-width: 400px;
+}
+
+.pedido-total {
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: #2f92e4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    max-width: 300px;
+}
