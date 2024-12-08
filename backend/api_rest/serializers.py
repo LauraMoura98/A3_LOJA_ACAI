@@ -66,7 +66,7 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User  # Referencie User diretamente aqui
+        model = User  
         fields = ['id', 'username', 'password', 'email']
 
     def create(self, validated_data):

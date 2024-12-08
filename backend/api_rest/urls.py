@@ -26,7 +26,7 @@ schema_view = get_schema_view(
 
 # Configurar router para PedidoViewSet
 router = DefaultRouter()
-router.register(r'api/v1/pedidos', PedidoViewSet, basename='pedido')
+router.register(r'pedidos/', PedidoViewSet, basename='pedido')
 
 urlpatterns = [
     # Rotas de produtos
