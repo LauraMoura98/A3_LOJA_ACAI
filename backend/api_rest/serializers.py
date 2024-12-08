@@ -91,9 +91,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
-    produto = serializers.StringRelatedField()
-    tamanho = serializers.StringRelatedField(allow_null=True)
-    acrescimos = serializers.StringRelatedField(many=True)
+
+    produto = serializers.PrimaryKeyRelatedField(queryset=Produto.objects.all())
+    tamanho = serializers.PrimaryKeyRelatedField(queryset=TamanhoProduto.objects.all(), allow_null=True)
+    acrescimos = serializers.PrimaryKeyRelatedField(queryset=Acrescimos.objects.all(), many=True, allow_null=True)
 
     class Meta:
         model = ItemPedido
