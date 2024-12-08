@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.models import Group
 
 from .models.produto import Produto
 from .models.categoria import Categoria
@@ -75,6 +76,10 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
+
+        user_group, created = Group.objects.get_or_create(name='site_users')
+        User.groups.add(user_group)
+
         return user
 
 
@@ -86,9 +91,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
-    produto = serializers.CharField(source='produto.nome')
-    tamanho = serializers.CharField(source='tamanho.nome', allow_null=True)
-    acrescimos = AcrescimoSerializer(many=True)
+    produto = serializers.StringRelatedField()
+    tamanho = serializers.StringRelatedField(allow_null=True)
+    acrescimos = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = ItemPedido
@@ -96,7 +101,37 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
+    items_pedido = ItemPedidoSerializer(many=True, read_only=True, source="itempedido_set")
+
     class Meta:
         model = Pedido
-        fields = ['id', 'cliente', 'status', 'data_criacao', 'data_atualizacao', 'senha']
-        read_only_fields = ['id', 'cliente']
+        fields = [
+            "id",
+            "status",
+            "data_criacao",
+            "cliente",
+            "senha",
+            "items_pedido",
+        ]
+
+    def to_representation(self, instance):
+
+        representation = super().to_representation(instance)
+
+        dados = [
+            instance.id,
+            instance.status,
+            instance.data_criacao.strftime('%Y-%m-%d %H:%M'),
+            instance.user.id,
+            [
+                {
+                    "id_produto": item.produto.id,
+                    "tamanho_produto": item.tamanho.nome if item.tamanho else "",
+                    "acrescimos": [acrescimo.nome for acrescimo in item.acrescimos.all()],
+                }
+                for item in instance.itempedido_set.all()
+            ],
+            instance.senha,
+        ]
+
+        return dados

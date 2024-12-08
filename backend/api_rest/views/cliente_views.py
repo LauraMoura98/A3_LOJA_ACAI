@@ -51,7 +51,7 @@ class PedidoViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # A consulta considera apenas os dados do usuário autenticado
+
         return Pedido.objects.filter(cliente=self.request.user)
 
     @swagger_auto_schema(
@@ -63,7 +63,7 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def list(self, request, *args, **kwargs):
-        # Retorna a lista de pedidos para o usuário autenticado.
+
         return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
@@ -76,7 +76,7 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        # Salva o pedido diretamente para o usuário autenticado.
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(cliente=request.user)
