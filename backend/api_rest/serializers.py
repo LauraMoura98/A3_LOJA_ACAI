@@ -121,31 +121,31 @@ class PedidoSerializer(serializers.ModelSerializer):
 
         # Criar os itens do pedido
         for item_data in itens_pedido_data:
-                    try:
-                        # Validando se o produto realmente existe no banco
-                        produto_nome = item_data.get("produto")
-                        produto = Produto.objects.filter(nome=produto_nome).first()
-                        if not produto:
-                            raise serializers.ValidationError({"error": f"Produto '{produto_nome}' não existe no banco de dados."})
+            try:
+                # Validando se o produto realmente existe no banco
+                produto_nome = item_data.get("produto")
+                produto = Produto.objects.filter(nome=produto_nome).first()
+                if not produto:
+                    raise serializers.ValidationError({"error": f"Produto '{produto_nome}' não existe no banco de dados."})
 
-                        # Buscar o tamanho pelo nome, se existir
-                        tamanho_nome = item_data.get("tamanho")
-                        tamanho = Tamanho.objects.filter(nome=tamanho_nome).first() if tamanho_nome else None
+                # Buscar o tamanho pelo nome, se existir
+                tamanho_nome = item_data.get("tamanho")
+                tamanho = Tamanho.objects.filter(nome=tamanho_nome).first() if tamanho_nome else None
 
-                        # Buscar os acrescimos
-                        acrescimos_nomes = item_data.get('acrescimos', [])
-                        acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
+                # Buscar os acrescimos
+                acrescimos_nomes = item_data.get('acrescimos', [])
+                acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
 
-                        # Criar o item do pedido
-                        item_pedido = ItemPedido.objects.create(
-                            pedido=pedido_existente,
-                            produto=produto,
-                            tamanho=tamanho,
-                        )
-                        # Associar os acrescimos
-                        item_pedido.acrescimos.set(acrescimos)
+                # Criar o item do pedido
+                item_pedido = ItemPedido.objects.create(
+                    pedido=pedido_existente,
+                    produto=produto,
+                    tamanho=tamanho,
+                )
+                # Associar os acrescimos
+                item_pedido.acrescimos.set(acrescimos)
 
-                    except Exception as e:
-                        raise serializers.ValidationError({"error": f"Erro ao processar item: {str(e)}"})
+            except Exception as e:
+                raise serializers.ValidationError({"error": f"Erro ao processar item: {str(e)}"})
 
-                return pedido_existente
+        return pedido_existente
