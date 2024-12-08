@@ -55,7 +55,7 @@ class PedidoViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-
+        # Retorna apenas os pedidos do usuário autenticado
         return Pedido.objects.filter(cliente=self.request.user)
 
     @swagger_auto_schema(
@@ -67,7 +67,6 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def list(self, request, *args, **kwargs):
-
         return super().list(request, *args, **kwargs)
 
     @swagger_auto_schema(
@@ -81,33 +80,29 @@ class PedidoViewSet(ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         try:
+            # Captura os dados do pedido
             serializer = self.get_serializer(data=request.data)
 
-            # Verifique os dados recebidos no POST
-            print("Dados recebidos no POST:", request.data)
-
             if serializer.is_valid():
+                # Cria o pedido vinculando automaticamente ao usuário autenticado
                 pedido = serializer.save(cliente=request.user)
 
-                # Verifique a criação do pedido
-                print("Pedido salvo:", pedido)
-
-                # Processando itens do pedido
+                # Processa os itens do pedido
                 itens_pedido_data = request.data.get('itens_pedido', [])
                 for item_data in itens_pedido_data:
                     try:
-                        produto_id = item_data.get("id_produto")
-                        tamanho_produto_nome = item_data.get("tamanho_produto")
-                        acrescimos_nome = item_data.get("acrescimos", [])
+                        produto_id = item_data.get("produto_id")
+                        tamanho_id = item_data.get("tamanho_id")
+                        acrescimos_nomes = item_data.get("acrescimos", [])
 
-                        # Validação dos dados do produto
+                        # Obtém o produto e valida
                         produto = Produto.objects.get(id=produto_id)
 
-                        # Validando tamanho e acrescimos
-                        tamanho_produto = TamanhoProduto.objects.filter(nome=tamanho_produto_nome).first()
-                        acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nome)
+                        # Obtém o tamanho e os acrescimos
+                        tamanho_produto = TamanhoProduto.objects.filter(id=tamanho_id).first()
+                        acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
 
-                        # Criando item do pedido
+                        # Cria o item do pedido
                         item_pedido = ItemPedido.objects.create(
                             pedido=pedido,
                             produto=produto,
@@ -116,21 +111,19 @@ class PedidoViewSet(ModelViewSet):
                         item_pedido.acrescimos.set(acrescimos)
                         item_pedido.save()
 
-                        # Log da criação do item
-                        print("Item do pedido salvo:", item_pedido)
-
+                    except Produto.DoesNotExist:
+                        return Response({"error": f"Produto com id {produto_id} não encontrado."},
+                                        status=status.HTTP_400_BAD_REQUEST)
                     except Exception as e:
-                        # Log detalhado sobre erro no item
-                        print(f"Erro ao processar item de pedido: {e}")
+                        return Response({"error": f"Erro ao processar item do pedido: {str(e)}"},
+                                        status=status.HTTP_400_BAD_REQUEST)
 
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
-            # Caso o serializer seja inválido
-            print("Erro no serializer:", serializer.errors)
+                # Retorna o pedido criado com sucesso
+                return Response(self.get_serializer(pedido).data, status=status.HTTP_201_CREATED)
+
+            # Retorna erros do serializer
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        except Exception as e:
-            # Log completo da exceção
-            print("Erro fatal no método create:", str(e))
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        except Exception as e:
+            # Captura qualquer erro inesperado
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
