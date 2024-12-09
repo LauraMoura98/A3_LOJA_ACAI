@@ -146,6 +146,6 @@ class PedidoSerializer(serializers.ModelSerializer):
             itens_criados.append(item_pedido)
 
         # Associar os itens criados ao pedido para que sejam exibidos no serializer
-        pedido_existente.itens_pedido.set(itens_criados)
+        pedido_existente.itens_pedido.add(*itens_criados)
 
         return pedido_existente
