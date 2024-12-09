@@ -114,6 +114,9 @@ class PedidoSerializer(serializers.ModelSerializer):
         itens_pedido_data = validated_data.pop('itens_pedido', [])
         user = self.context['request'].user  # Capturar o usuário autenticado
 
+        # Remover o campo 'cliente' de validated_data, se existir
+        validated_data.pop('cliente', None)
+
         # Buscar ou criar um pedido existente
         pedido_existente = Pedido.objects.filter(cliente=user, status='PENDENTE').first()
         if not pedido_existente:
