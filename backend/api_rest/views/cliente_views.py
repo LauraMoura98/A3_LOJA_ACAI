@@ -82,38 +82,44 @@ class PedidoViewSet(ModelViewSet):
         try:
             # Captura os dados do pedido
             serializer = self.get_serializer(data=request.data)
+            serializer.context['request'] = request  # Passa o contexto
 
             if serializer.is_valid():
-                # Cria o pedido vinculando automaticamente ao usuário autenticado
+                # Cria o pedido vinculado automaticamente ao usuário autenticado
                 pedido = serializer.save(cliente=request.user)
 
                 # Processa os itens do pedido
                 itens_pedido_data = request.data.get('itens_pedido', [])
                 for item_data in itens_pedido_data:
                     try:
-                        produto_id = item_data.get("produto_id")
-                        tamanho_id = item_data.get("tamanho_id")
+                        # Obtém o nome do produto e busca no banco
+                        produto_nome = item_data.get("produto")
+                        if not produto_nome:
+                            return Response({"error": "O campo 'produto' é obrigatório."}, 
+                                            status=status.HTTP_400_BAD_REQUEST)
+
+                        produto = Produto.objects.filter(nome=produto_nome).first()
+                        if not produto:
+                            return Response({"error": f"Produto com nome '{produto_nome}' não encontrado."},
+                                            status=status.HTTP_400_BAD_REQUEST)
+
+                        # Busca opcional pelo tamanho
+                        tamanho_nome = item_data.get("tamanho")
+                        tamanho = Tamanho.objects.filter(nome=tamanho_nome).first() if tamanho_nome else None
+
+                        # Busca opcional pelos acrescimos
                         acrescimos_nomes = item_data.get("acrescimos", [])
-
-                        # Obtém o produto e valida
-                        produto = Produto.objects.get(id=produto_id).first()
-
-                        # Obtém o tamanho e os acrescimos
-                        tamanho_produto = TamanhoProduto.objects.filter(id=tamanho_id).first()
                         acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
 
                         # Cria o item do pedido
                         item_pedido = ItemPedido.objects.create(
                             pedido=pedido,
                             produto=produto,
-                            tamanho=tamanho_produto,
+                            tamanho=tamanho,
                         )
                         item_pedido.acrescimos.set(acrescimos)
                         item_pedido.save()
 
-                    except Produto.DoesNotExist:
-                        return Response({"error": f"Produto com id {produto_id} não encontrado."},
-                                        status=status.HTTP_400_BAD_REQUEST)
                     except Exception as e:
                         return Response({"error": f"Erro ao processar item do pedido: {str(e)}"},
                                         status=status.HTTP_400_BAD_REQUEST)
