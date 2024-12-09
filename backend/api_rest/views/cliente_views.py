@@ -96,7 +96,7 @@ class PedidoViewSet(ModelViewSet):
                         acrescimos_nomes = item_data.get("acrescimos", [])
 
                         # Obtém o produto e valida
-                        produto = Produto.objects.get(id=produto_id)
+                        produto = Produto.objects.get(id=produto_id).first()
 
                         # Obtém o tamanho e os acrescimos
                         tamanho_produto = TamanhoProduto.objects.filter(id=tamanho_id).first()
