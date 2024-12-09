@@ -124,9 +124,16 @@ class PedidoSerializer(serializers.ModelSerializer):
             produto = Produto.objects.filter(nome=produto_nome).first()
             tamanho_nome = item_data.pop('tamanho')
             tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
-            acrescimos_data = item_data.pop('acrescimos', [])
+            acrescimos_nomes = item_data.pop('acrescimos', [])
+            acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
+            if len(acrescimos) != len(acrescimos_nomes):
+                nomes_existentes = list(acrescimos.values_list('nome', flat=True))
+                nomes_inexistentes = set(acrescimos_nomes) - set(nomes_existentes)
+                raise serializers.ValidationError(
+                    {"error": f"Os acréscimos {', '.join(nomes_inexistentes)} não foram encontrados."}
+                )
             item_pedido = ItemPedido.objects.create(produto=produto, tamanho=tamanho, **item_data)
-            item_pedido.acrescimos.set(acrescimos_data)
+            item_pedido.acrescimos.set(acrescimos)
             pedido.itens_pedido.add(item_pedido)
 
         return pedido
