@@ -110,16 +110,18 @@ class PedidoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
 
     def create(self, validated_data):
-        # Capturar os dados de itens no pedido
+        # Dados de itens no pedido
         itens_pedido_data = validated_data.pop('itens_pedido', [])
         user = self.context['request'].user  # Capturar o usuário autenticado
+
+        # Remover o campo 'cliente' de validated_data, se existir
+        validated_data.pop('cliente', None)
 
         # Buscar ou criar um pedido existente
         pedido_existente = Pedido.objects.filter(cliente=user, status='PENDENTE').first()
         if not pedido_existente:
             pedido_existente = Pedido.objects.create(cliente=user, **validated_data)
 
-        # Criar os itens do pedido
         itens_criados = []
         for item_data in itens_pedido_data:
             produto_nome = item_data.get("produto")
