@@ -51,11 +51,12 @@ class LoginUsuarioView(TokenObtainPairView):
 
 
 class PedidoViewSet(ModelViewSet):
+    queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Retorna apenas os pedidos do usuário autenticado
+
         return Pedido.objects.filter(cliente=self.request.user)
 
     @swagger_auto_schema(
@@ -79,57 +80,11 @@ class PedidoViewSet(ModelViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        try:
-            # Captura os dados do pedido
-            serializer = self.get_serializer(data=request.data)
-            serializer.context['request'] = request  # Passa o contexto
+        serializer = self.get_serializer(data=request.data)
+        serializer.context['request'] = request  # Passar o contexto para capturar o usuário
 
-            if serializer.is_valid():
-                # Cria o pedido vinculado automaticamente ao usuário autenticado
-                pedido = serializer.save(cliente=request.user)
+        if serializer.is_valid():
+            pedido = serializer.save()
+            return Response(self.get_serializer(pedido).data, status=status.HTTP_201_CREATED)
 
-                # Processa os itens do pedido
-                itens_pedido_data = request.data.get('itens_pedido', [])
-                for item_data in itens_pedido_data:
-                    try:
-                        # Obtém o nome do produto e busca no banco
-                        produto_nome = item_data.get("produto")
-                        if not produto_nome:
-                            return Response({"error": "O campo 'produto' é obrigatório."}, 
-                                            status=status.HTTP_400_BAD_REQUEST)
-
-                        produto = Produto.objects.filter(nome=produto_nome).first()
-                        if not produto:
-                            return Response({"error": f"Produto com nome '{produto_nome}' não encontrado."},
-                                            status=status.HTTP_400_BAD_REQUEST)
-
-                        # Busca opcional pelo tamanho
-                        tamanho_nome = item_data.get("tamanho")
-                        tamanho = Tamanho.objects.filter(nome=tamanho_nome).first() if tamanho_nome else None
-
-                        # Busca opcional pelos acrescimos
-                        acrescimos_nomes = item_data.get("acrescimos", [])
-                        acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
-
-                        # Cria o item do pedido
-                        item_pedido = ItemPedido.objects.create(
-                            pedido=pedido,
-                            produto=produto,
-                            tamanho=tamanho,
-                        )
-                        item_pedido.acrescimos.set(acrescimos)
-                        item_pedido.save()
-
-                    except Exception as e:
-                        return Response({"error": f"Erro ao processar item do pedido: {str(e)}"},
-                                        status=status.HTTP_400_BAD_REQUEST)
-
-                # Retorna o pedido criado com sucesso
-                return Response(self.get_serializer(pedido).data, status=status.HTTP_201_CREATED)
-
-            # Retorna erros do serializer
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        except Exception as e:
-            # Captura qualquer erro inesperado
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
