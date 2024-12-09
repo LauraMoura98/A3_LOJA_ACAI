@@ -125,7 +125,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             tamanho_nome = item_data.pop('tamanho')
             tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
             acrescimos_nomes = item_data.pop('acrescimos', [])
-            acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
+            acrescimos = list(Acrescimos.objects.filter(nome__in=acrescimos_nomes))
             if len(acrescimos) != len(acrescimos_nomes):
                 nomes_existentes = list(acrescimos.values_list('nome', flat=True))
                 nomes_inexistentes = set(acrescimos_nomes) - set(nomes_existentes)
