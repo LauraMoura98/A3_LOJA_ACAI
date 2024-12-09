@@ -117,31 +117,12 @@ class PedidoSerializer(serializers.ModelSerializer):
         # Remover o campo 'cliente' de validated_data, se existir
         validated_data.pop('cliente', None)
 
-        # Buscar ou criar um pedido existente
-        pedido_existente = Pedido.objects.filter(cliente=user, status='PENDENTE').first()
-        if not pedido_existente:
-            pedido_existente = Pedido.objects.create(cliente=user, **validated_data)
+        pedido = Pedido.objects.create(cliente=user, **validated_data)
 
         for item_data in itens_pedido_data:
-            produto_nome = item_data.get("produto")
-            produto = Produto.objects.filter(nome=produto_nome).first()
-            if not produto:
-                raise serializers.ValidationError(
-                    {"error": f"Produto com nome '{produto_nome}' não existe no banco de dados."}
-                )
+            acrescimos_data = item_data.pop('acrescimos', [])
+            item_pedido = ItemPedido.objects.create(**item_data)
+            item_pedido.acrescimos.set(acrescimos_data)
+            pedido.itens_pedido.add(item_pedido)
 
-            tamanho_nome = item_data.get("tamanho")
-            tamanho = Tamanho.objects.filter(nome=tamanho_nome).first() if tamanho_nome else None
-
-            acrescimos_nomes = item_data.get('acrescimos', [])
-            acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
-
-            # Criar o item do pedido com a referência ao pedido existente
-            item_pedido = ItemPedido.objects.create(
-                pedido=pedido_existente,
-                produto=produto,
-                tamanho=tamanho,
-            )
-            item_pedido.acrescimos.set(acrescimos)
-
-        return pedido_existente
+        return pedido
