@@ -78,7 +78,7 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         )
 
         user_group, created = Group.objects.get_or_create(name='site_users')
-        User.groups.add(user_group)
+        user.groups.add(user_group)
 
         return user
 
