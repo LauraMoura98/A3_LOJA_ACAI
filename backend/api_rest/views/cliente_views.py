@@ -12,7 +12,7 @@ from api_rest.serializers import (
 )
 
 from api_rest.models.pedido import Pedido
-from api_rest.models.tamanho_produto import TamanhoProduto
+from api_rest.models.tamanho import Tamanho
 from api_rest.models.produto import Produto
 from api_rest.models.acrescimos import Acrescimos
 from api_rest.models.item_pedido import ItemPedido
