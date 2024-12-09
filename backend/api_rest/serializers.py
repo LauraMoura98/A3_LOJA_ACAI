@@ -122,8 +122,10 @@ class PedidoSerializer(serializers.ModelSerializer):
         for item_data in itens_pedido_data:
             produto_nome = item_data.pop('produto')
             produto = Produto.objects.filter(nome=produto_nome).first()
+            tamanho_nome = item_data.pop('tamanho')
+            tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
             acrescimos_data = item_data.pop('acrescimos', [])
-            item_pedido = ItemPedido.objects.create(produto=produto, **item_data)
+            item_pedido = ItemPedido.objects.create(produto=produto, tamanho=tamanho, **item_data)
             item_pedido.acrescimos.set(acrescimos_data)
             pedido.itens_pedido.add(item_pedido)
 
