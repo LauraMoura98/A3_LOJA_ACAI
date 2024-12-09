@@ -122,7 +122,6 @@ class PedidoSerializer(serializers.ModelSerializer):
         if not pedido_existente:
             pedido_existente = Pedido.objects.create(cliente=user, **validated_data)
 
-        itens_criados = []
         for item_data in itens_pedido_data:
             produto_nome = item_data.get("produto")
             produto = Produto.objects.filter(nome=produto_nome).first()
@@ -137,15 +136,12 @@ class PedidoSerializer(serializers.ModelSerializer):
             acrescimos_nomes = item_data.get('acrescimos', [])
             acrescimos = Acrescimos.objects.filter(nome__in=acrescimos_nomes)
 
+            # Criar o item do pedido com a referência ao pedido existente
             item_pedido = ItemPedido.objects.create(
                 pedido=pedido_existente,
                 produto=produto,
                 tamanho=tamanho,
             )
             item_pedido.acrescimos.set(acrescimos)
-            itens_criados.append(item_pedido)
-
-        # Associar os itens criados ao pedido para que sejam exibidos no serializer
-        pedido_existente.itens_pedido.add(*itens_criados)
 
         return pedido_existente
