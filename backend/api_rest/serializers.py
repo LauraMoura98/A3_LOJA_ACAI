@@ -117,6 +117,6 @@ class PedidoSerializer(serializers.ModelSerializer):
             acrescimos_data = item_data.pop('acrescimos', [])
             item = ItemPedido.objects.create(**item_data)
             item.acrescimos.set(acrescimos_data)
-            pedido.item_pedido.add(item)
+            pedido.itens_pedido.add(item)
 
         return pedido
