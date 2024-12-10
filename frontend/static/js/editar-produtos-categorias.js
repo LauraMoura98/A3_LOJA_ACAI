@@ -261,11 +261,55 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
-
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return null;
+    }
+    
 
     deleteButton.addEventListener("click", function () {
-        // ... (código para exclusão permanece o mesmo)
+        if (!deleteCheckbox.checked) {
+            alert("Por favor, marque a caixa de confirmação antes de excluir.");
+            return;
+        }
+    
+        const itemId = itemList.querySelector("li.selected")?.dataset.id;
+        if (!itemId) {
+            alert("Selecione um item para excluir.");
+            return;
+        }
+    
+        const apiUrl = currentItemType === "produtos" 
+            ? `${apiProductURL}${itemId}/` 
+            : `${apiCategoryURL}${itemId}/`;
+    
+        const token = getCookie("authToken");
+        if (!token) {
+            alert("Token de autenticação não encontrado.");
+            return;
+        }
+    
+        fetch(apiUrl, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro HTTP! status: ${response.status}`);
+            }
+            alert(`${currentItemType === "produtos" ? "Produto" : "Categoria"} excluído(a) com sucesso!`);
+            location.reload();
+        })
+        .catch(error => {
+            console.error("Erro ao excluir:", error);
+            alert(`Erro ao excluir o item: ${error.message}`);
+        });
     });
+    
 
 
     function showMessage(element, messageText, isSuccess) { 
@@ -274,8 +318,12 @@ document.addEventListener("DOMContentLoaded", function () {
         element.style.display = "block";
      }
 
-    function clearEditForm() {
-         // ... (código sem alterações)
+     function clearEditForm() {
+        document.getElementById("edit-nome").value = "";
+        document.getElementById("edit-descricao").value = "";
+        document.getElementById("edit-imagem_url").value = "";
+        document.getElementById("edit-disponibilidade").checked = false;
+        document.getElementById("edit-categoria").value = "";
         acrescimosList.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
             checkbox.checked = false;
         });
