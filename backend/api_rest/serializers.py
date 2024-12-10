@@ -108,7 +108,7 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        itens_data = validated_data.pop('item_pedido')
+        itens_data = validated_data.pop('itens_pedido')
         request = self.context.get('request')
 
         pedido = Pedido.objects.create(cliente=request.user, **validated_data)
