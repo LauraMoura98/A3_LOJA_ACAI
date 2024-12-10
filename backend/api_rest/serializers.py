@@ -91,49 +91,16 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
-    produto = serializers.CharField(required=True)  # Nome do produto obrigatório
-    tamanho = serializers.CharField(required=False, allow_null=True)  # Nome do tamanho
-    acrescimos = serializers.ListField(child=serializers.CharField(), required=False)  # Lista de nomes de acrescimos
-
     class Meta:
         model = ItemPedido
         fields = ['produto', 'tamanho', 'acrescimos']
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    itens_pedido = ItemPedidoSerializer(many=True)
+    item_pedido = ItemPedidoSerializer(many=True)
     senha = serializers.CharField(read_only=True)
 
     class Meta:
         model = Pedido
-        fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'itens_pedido']
-        read_only_fields = ['data_criacao', 'data_atualizacao', 'senha']
-
-    def create(self, validated_data):
-        # Dados de itens no pedido
-        itens_pedido_data = validated_data.pop('itens_pedido', [])
-        user = self.context['request'].user  # Capturar o usuário autenticado
-
-        # Remover o campo 'cliente' de validated_data, se existir
-        validated_data.pop('cliente', None)
-
-        pedido = Pedido.objects.create(cliente=user, **validated_data)
-
-        for item_data in itens_pedido_data:
-            produto_nome = item_data.pop('produto')
-            produto = Produto.objects.filter(nome=produto_nome).first()
-            tamanho_nome = item_data.pop('tamanho')
-            tamanho = Tamanho.objects.filter(nome=tamanho_nome).first()
-            acrescimos_nomes = item_data.pop('acrescimos', [])
-            acrescimos = list(Acrescimos.objects.filter(nome__in=acrescimos_nomes))
-            if len(acrescimos) != len(acrescimos_nomes):
-                nomes_existentes = list(acrescimos.values_list('nome', flat=True))
-                nomes_inexistentes = set(acrescimos_nomes) - set(nomes_existentes)
-                raise serializers.ValidationError(
-                    {"error": f"Os acréscimos {', '.join(nomes_inexistentes)} não foram encontrados."}
-                )
-            item_pedido = ItemPedido.objects.create(produto=produto, tamanho=tamanho, **item_data)
-            item_pedido.acrescimos.set(acrescimos)
-            pedido.itens_pedido.add(item_pedido)
-
-        return pedido
+        fields = '__all__'
+        read_only_fields = ['cliente', 'data_criacao', 'data_atualizacao', 'senha']
