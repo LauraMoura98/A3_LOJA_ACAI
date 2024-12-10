@@ -97,7 +97,6 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    item_pedido = ItemPedidoSerializer(many=True)
     senha = serializers.CharField(read_only=True)
 
     class Meta:
