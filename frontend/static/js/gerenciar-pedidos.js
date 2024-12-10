@@ -7,7 +7,7 @@ function getCookie(name) {
 
 // Função para buscar pedidos da API
 async function fetchPedidos() {
-    const token = getCookie("conta-token"); // Obtenha o token de autenticação
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
 
     const response = await fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/pedidos/', {
         headers: {
@@ -23,7 +23,7 @@ async function fetchPedidos() {
 
 // Função para buscar produtos da API
 async function fetchProdutos() {
-    const token = getCookie("conta-token"); // Obtenha o token de autenticação
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
 
     const response = await fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/produtos/', {
         headers: {
@@ -39,7 +39,7 @@ async function fetchProdutos() {
 
 // Função para buscar acréscimos da API
 async function fetchAcrescimos() {
-    const token = getCookie("conta-token"); // Obtenha o token de autenticação
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
 
     const response = await fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/acrescimos/', {
         headers: {
@@ -55,10 +55,10 @@ async function fetchAcrescimos() {
 
 // Função para atualizar o status do pedido
 async function updatePedidoStatus(id, status) {
-    const token = getCookie("conta-token"); // Obtenha o token de autenticação
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
 
     const response = await fetch(`https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/pedidos/${id}/`, {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ async function updatePedidoStatus(id, status) {
 
 // Função para excluir o pedido
 async function deletePedido(id) {
-    const token = getCookie("conta-token"); // Obtenha o token de autenticação
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
 
     const response = await fetch(`https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/pedidos/${id}/`, {
         method: 'DELETE',
@@ -117,23 +117,21 @@ async function renderPedidos() {
                     `).join('')}
                 </ul>
                 <button class="excluir" data-id="${pedido.id}">Excluir</button>
-                <button class="atualizar" data-id="${pedido.id}" data-status="PREPARANDO">Preparar</button>
-                <button class="atualizar" data-id="${pedido.id}" data-status="CONCLUIDO">Concluir</button>
-                <button class="atualizar" data-id="${pedido.id}" data-status="ENTREGUE">Entregar</button>
+                <button class="atualizar" data-id="${pedido.id}" data-status="PREPARANDO">Preparando</button>
+                <button class="atualizar" data-id="${pedido.id}" data-status="CONCLUIDO">Concluido</button>
+                <button class="atualizar" data-id="${pedido.id}" data-status="ENTREGUE">Entregue</button>
             `;
 
             pedidosContainer.appendChild(pedidoElement);
-        }
 
-        // Adiciona eventos para os botões
-        pedidos.forEach(pedido => {
-            const excluirButton = pedidoElement.querySelector(`.excluir[data-id="${pedido.id}"]`);
+            // Adiciona eventos para os botões
+            const excluirButton = pedidoElement.querySelector(`.excluir`);
             excluirButton.addEventListener('click', async () => {
                 await deletePedido(pedido.id);
                 renderPedidos(); // Recarrega os pedidos após a exclusão
             });
 
-            const atualizarButtons = pedidoElement.querySelectorAll(`.atualizar[data-id="${pedido.id}"]`);
+            const atualizarButtons = pedidoElement.querySelectorAll(`.atualizar`);
             atualizarButtons.forEach(button => {
                 button.addEventListener('click', async () => {
                     const status = button.getAttribute('data-status');
@@ -141,12 +139,13 @@ async function renderPedidos() {
                     renderPedidos(); // Recarrega os pedidos após a atualização do status
                 });
             });
-        });
+        }
     } catch (error) {
         console.error(error);
         alert('Erro ao carregar pedidos. Tente novamente mais tarde.');
     }
 }
+
 
 // Carregar pedidos ao iniciar a página
 document.addEventListener('DOMContentLoaded', renderPedidos);
