@@ -102,5 +102,5 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha']
+        fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'item_pedido']
         read_only_fields = ['cliente', 'data_criacao', 'data_atualizacao', 'senha']
