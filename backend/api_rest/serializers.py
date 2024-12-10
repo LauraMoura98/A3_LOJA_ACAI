@@ -98,23 +98,9 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 
 
 class PedidoSerializer(serializers.ModelSerializer):
-    item_pedido = ItemPedidoSerializer(many=True)
     senha = serializers.CharField(read_only=True)
 
     class Meta:
         model = Pedido
         fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha', 'item_pedido']
         read_only_fields = ['cliente', 'data_criacao', 'data_atualizacao', 'senha']
-
-    def create(self, validated_data):
-
-        itens_data = validated_data.pop('item_pedido')
-        request = self.context.get('request')
-
-        pedido = Pedido.objects.create(cliente=request.user, **validated_data)
-
-        for item_data in itens_data:
-            item = ItemPedido.objects.create(**item_data)
-            pedido.item_pedido.add(item)
-
-        return pedido

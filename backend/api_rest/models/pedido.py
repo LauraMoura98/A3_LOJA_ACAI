@@ -17,7 +17,7 @@ class Pedido(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
     senha = models.CharField(max_length=10, blank=True, null=True)
-    itens_pedido = models.ManyToManyField('ItemPedido')
+    itens_pedido = models.JSONField()
 
     def save(self, *args, **kwargs):
         if not self.senha:
