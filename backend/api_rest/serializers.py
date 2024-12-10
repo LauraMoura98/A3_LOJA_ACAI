@@ -89,17 +89,18 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         return data
 
-
 class ItemPedidoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ItemPedido
         fields = ['produto', 'tamanho', 'acrescimos']
 
 
 class PedidoSerializer(serializers.ModelSerializer):
+    item_pedido = ItemPedidoSerializer(many=True)
     senha = serializers.CharField(read_only=True)
 
     class Meta:
         model = Pedido
-        fields = '__all__'
+        fields = ['id', 'status', 'data_criacao', 'data_atualizacao', 'senha']
         read_only_fields = ['cliente', 'data_criacao', 'data_atualizacao', 'senha']
