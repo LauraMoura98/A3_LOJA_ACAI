@@ -115,6 +115,6 @@ class PedidoSerializer(serializers.ModelSerializer):
 
         for item_data in itens_data:
             item = ItemPedido.objects.create(**item_data)
-            pedido.item_pedido.add(item)
+            pedido.item_pedido.set(item)
 
         return pedido
