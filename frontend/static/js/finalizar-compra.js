@@ -5,6 +5,16 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+// Função para criar ou apagar um cookie
+function setCookie(name, value, days) {
+    if (value === null) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    } else {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/;`;
+    }
+}
+
 // Função para buscar produtos, tamanhos e acréscimos da API
 async function fetchAPIs() {
     const [produtosResponse, tamanhosResponse, acrescimosResponse] = await Promise.all([
@@ -25,38 +35,54 @@ async function fetchAPIs() {
 }
 
 // Função para mapear os itens do cookie para os IDs da API
-function mapItemsToIDs(pedidos, produtos, tamanhos, acrescimos) {
+function mapItemsToIDs(pedidos, produtos, tamanhos) {
     return pedidos.map(item => {
-        const produtoID = produtos.find(prod => prod.id === item.id_produto)?.id; // Obtém o ID do produto
-        const tamanhoID = tamanhos.find(tam => tam.nome === item.tamanho_produto)?.id; // Obtém o ID do tamanho
-        
-        // Obtém os IDs dos acréscimos, filtrando nulos
-        const acrescimosIDs = item.acrescimos
-            .map(ac => acrescimos.find(acr => acr.id === ac)?.id) // Tenta encontrar o ID do acréscimo
-            .filter(acID => acID !== undefined); // Filtra IDs undefined (ou seja, não encontrados)
+        const produtoID = produtos.find(prod => prod.id === item.id_produto)?.id;
+        const tamanhoID = tamanhos.find(tam => tam.nome === item.tamanho_produto)?.id;
+        const acrescimosIDs = item.acrescimos.map(ac => parseInt(ac, 10));
 
         return {
             produto: produtoID,
             tamanho: tamanhoID,
-            acrescimos: acrescimosIDs.length > 0 ? acrescimosIDs : [] // Se não houver acréscimos, retorna um array vazio
+            acrescimos: acrescimosIDs
         };
     });
 }
 
+// Função para verificar o status do pedido
+async function verificarStatusPedido(id) {
+    try {
+        const response = await fetch(`https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/pedidos/`);
+        if (!response.ok) throw new Error('Erro ao buscar status do pedido.');
+
+        const pedidos = await response.json();
+        const pedido = pedidos.find(p => p.id === id);
+
+        if (pedido) {
+            alert(`Status do pedido #${pedido.id}: ${pedido.status}`);
+        } else {
+            alert('Pedido não encontrado. Limpando informações salvas.');
+            setCookie('comprado', null); // Apaga o cookie se o pedido não for encontrado
+        }
+    } catch (error) {
+        console.error(error);
+        alert('Erro ao verificar status do pedido.');
+    }
+}
+
 // Verificar se o token está salvo e habilitar o botão de finalizar compra
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const token = getCookie('conta-token');
     const finalizarButton = document.querySelector('.finalizar-compra');
 
     if (!finalizarButton) {
         console.error("Botão de finalizar compra não encontrado.");
-        return; // Interrompe a execução se o botão não for encontrado
+        return;
     }
 
     let produtos, tamanhos, acrescimos;
 
     try {
-        // Buscar dados das APIs ao carregar a página
         const apiData = await fetchAPIs();
         produtos = apiData.produtos;
         tamanhos = apiData.tamanhos;
@@ -64,24 +90,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch (error) {
         console.error(error);
         alert('Erro ao carregar dados necessários. Tente novamente mais tarde.');
-        return; // Interrompe a execução se houver erro ao buscar os dados
+        return;
     }
 
     if (token) {
-        finalizarButton.addEventListener('click', async function(e) {
-            e.preventDefault(); // Impede o comportamento padrão do botão
+        finalizarButton.addEventListener('click', async function (e) {
+            e.preventDefault();
 
             const pedidosCookie = getCookie('pedidos');
-            const pedidos = JSON.parse(decodeURIComponent(pedidosCookie)); // decodifica o cookie
-            const itensPedido = mapItemsToIDs(pedidos, produtos, tamanhos, acrescimos);
+            const pedidos = JSON.parse(decodeURIComponent(pedidosCookie));
+            const itensPedido = mapItemsToIDs(pedidos, produtos, tamanhos);
 
             const payload = {
                 status: "PENDENTE",
-                itens_pedido: itensPedido.filter(item => item.produto && item.tamanho) // Filtra itens com produto e tamanho
+                itens_pedido: itensPedido.filter(item => item.produto && item.tamanho)
             };
 
             try {
-                // Envio da requisição POST para a API
                 const response = await fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/pedidos/', {
                     method: 'POST',
                     headers: {
@@ -92,7 +117,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                 });
 
                 if (response.ok) {
-                    alert('Pedido finalizado com sucesso!');
+                    const pedido = await response.json();
+
+                    // Salva o ID e a senha no cookie "comprado"
+                    setCookie('pedidos', null); // Apaga o cookie dos pedidos
+                    setCookie('comprado', JSON.stringify({ id: pedido.id, senha: pedido.senha }), 7);
+
+                    // Exibe mensagem com ID e senha
+                    alert(`Pedido #${pedido.id} finalizado com sucesso! Aqui está a senha para retirar o seu pedido: ${pedido.senha}. Por favor, tire um print da tela`);
+
+                    // Verificar status do pedido após finalização
+                    verificarStatusPedido(pedido.id);
                 } else {
                     const errorData = await response.json();
                     console.error(errorData);
@@ -104,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
     } else {
-        finalizarButton.addEventListener('click', function(e) {
+        finalizarButton.addEventListener('click', function (e) {
             e.preventDefault();
             alert("Faça o Login antes de tentar finalizar a compra");
         });

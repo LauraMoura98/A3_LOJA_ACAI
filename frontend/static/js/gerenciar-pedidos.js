@@ -53,6 +53,33 @@ async function fetchAcrescimos() {
     return await response.json();
 }
 
+// Função para buscar tamanhos e tamanhos de produtos da API
+async function fetchTamanhos() {
+    const token = getCookie("authToken"); // Obtenha o token de autenticação
+
+    const [tamanhosResponse, tamanhosProdutosResponse] = await Promise.all([
+        fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/tamanhos/', {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        }),
+        fetch('https://kong-6266dc6838uss9iu0.kongcloud.dev/api/v1/tamanho-produtos/', {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+    ]);
+
+    if (!tamanhosResponse.ok || !tamanhosProdutosResponse.ok) {
+        throw new Error('Erro ao buscar tamanhos ou tamanhos de produtos');
+    }
+
+    const tamanhos = await tamanhosResponse.json();
+    const tamanhosProdutos = await tamanhosProdutosResponse.json();
+
+    return { tamanhos, tamanhosProdutos };
+}
+
 // Função para atualizar o status do pedido
 async function updatePedidoStatus(id, status) {
     const token = getCookie("authToken"); // Obtenha o token de autenticação
@@ -97,7 +124,32 @@ async function renderPedidos() {
         const pedidos = await fetchPedidos();
         const produtos = await fetchProdutos();
         const acrescimos = await fetchAcrescimos();
-        
+        const { tamanhos, tamanhosProdutos } = await fetchTamanhos();
+
+        // Cria um mapa para acesso rápido a produtos, acréscimos e tamanhos por ID
+        const produtosMap = produtos.reduce((map, produto) => {
+            map[produto.id] = produto.nome;
+            return map;
+        }, {});
+
+        const acrescimosMap = acrescimos.reduce((map, acrescimo) => {
+            map[acrescimo.id] = acrescimo.nome;
+            return map;
+        }, {});
+
+        const tamanhosMap = tamanhos.reduce((map, tamanho) => {
+            map[tamanho.id] = { nome: tamanho.nome, descricao: tamanho.descricao };
+            return map;
+        }, {});
+
+        const tamanhosProdutosMap = tamanhosProdutos.reduce((map, item) => {
+            if (!map[item.produto]) {
+                map[item.produto] = {};
+            }
+            map[item.produto][item.tamanho] = item;
+            return map;
+        }, {});
+
         const pedidosContainer = document.getElementById('pedidos-container');
         pedidosContainer.innerHTML = ''; // Limpa o container antes de adicionar novos pedidos
 
@@ -105,20 +157,27 @@ async function renderPedidos() {
             const pedidoElement = document.createElement('div');
             pedidoElement.classList.add('pedido');
 
+            // Converte os IDs de produtos e acréscimos para os respectivos nomes e tamanhos
+            const itensHtml = pedido.itens_pedido.map(item => {
+                const nomeProduto = produtosMap[item.produto] || "Produto desconhecido";
+                const tamanhoInfo = tamanhosMap[item.tamanho] || { nome: "Tamanho desconhecido", descricao: "" };
+                const nomesAcrescimos = item.acrescimos.map(acrescimoId => acrescimosMap[acrescimoId] || "Acréscimo desconhecido");
+                return `
+                    <li>${nomeProduto} (${tamanhoInfo.nome} - ${tamanhoInfo.descricao}) ${nomesAcrescimos.length > 0 ? ` (Acréscimos: ${nomesAcrescimos.join(', ')})` : ''}</li>
+                `;
+            }).join('');
+
             // Adiciona detalhes do pedido
             pedidoElement.innerHTML = `
                 <h2>Pedido #${pedido.id}</h2>
                 <p>Status: <span>${pedido.status}</span></p>
+                <p>Senha: ${pedido.senha}</p>
                 <p>Data: ${new Date(pedido.data_criacao).toLocaleString()}</p>
                 <p>Itens:</p>
-                <ul>
-                    ${pedido.itens_pedido.map(item => `
-                        <li>${item.produto} - ${item.tamanho} ${item.acrescimos.length > 0 ? ` (Acréscimos: ${item.acrescimos.join(', ')})` : ''}</li>
-                    `).join('')}
-                </ul>
+                <ul>${itensHtml}</ul>
                 <button class="excluir" data-id="${pedido.id}">Excluir</button>
-                <button class="atualizar" data-id="${pedido.id}" data-status="PREPARANDO">Preparando</button>
-                <button class="atualizar" data-id="${pedido.id}" data-status="CONCLUIDO">Concluido</button>
+                <button class="atualizar" data-id="${pedido.id}" data-status="EM_PREPARO">Preparando</button>
+                <button class="atualizar" data-id="${pedido.id}" data-status="PRONTO">Concluído</button>
                 <button class="atualizar" data-id="${pedido.id}" data-status="ENTREGUE">Entregue</button>
             `;
 
@@ -145,7 +204,6 @@ async function renderPedidos() {
         alert('Erro ao carregar pedidos. Tente novamente mais tarde.');
     }
 }
-
 
 // Carregar pedidos ao iniciar a página
 document.addEventListener('DOMContentLoaded', renderPedidos);
