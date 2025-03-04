@@ -7,7 +7,14 @@
         font-family: Montserrat, sans-serif;
         background-color:#f9f9f9;
     }
-    
+
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+    }
     .navbar {
         position: fixed; /* Fixa a navbar na tela */
         top: 20px; /* Dá um espaço de 20px do topo da tela */
@@ -73,10 +80,11 @@
         background-repeat: no-repeat; /* Evita que a imagem se repita */
         background-position: center; /* Centraliza a imagem na div */
         width: 100%; /* Largura total da div */
-        height: 100vh; /* Altura da div igual à altura da tela */
+        height: 120vh; /* Altura da div igual à altura da tela */
     }
     
     #sobre-titulo{
+        text-align: center;
         font-size:24px;
         margin-left: 20px;
         color: #1C274C;
@@ -189,7 +197,7 @@
     
     .footer-content {
         display: flex;
-        justify-content: flex-start;
+        justify-content:space-between;
         align-items: center;
         flex-wrap: wrap;
         margin-bottom: 15px;
@@ -394,9 +402,8 @@
     
     .fale-comigo{
         font-size:16px;
-        max-width: 500px;
         margin-left: 20px;
-        text-align: justify;
+        text-align: center;
         flex: 1;
         
     }
@@ -870,7 +877,7 @@
         font-size: 16px; 
         max-width: 90%; 
         margin: 10px;
-        text-align: justify;
+        text-align: center;
     }
     
     /* GALERIA */
